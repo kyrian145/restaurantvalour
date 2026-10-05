@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Velour — An exclusive fine dining experience. Handcrafted Nigerian cuisine, intimate ambiance, and world-class service." />
+  <title>Velour — Fine Nigerian Dining</title>
+
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c96e;
+      --gold-dim:   #a07930;
+      --cream:      #f5f0e8;
+      --cream-dim:  #d4c9b0;
+      --bg:         #0a0a0a;
+      --bg-2:       #111111;
+      --bg-3:       #181818;
+      --bg-card:    #141414;
+      --border:     rgba(201,168,76,0.18);
+      --border-md:  rgba(201,168,76,0.35);
+      --text:       #e8e0d0;
+      --text-dim:   #998f7a;
+      --red:        #c94c4c;
+      --green:      #25D366;
+      --font-disp:  'Cormorant Garamond', Georgia, serif;
+      --font-body:  'Jost', sans-serif;
+      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+      --shadow-md:  0 8px 40px rgba(0,0,0,0.6);
+      --nav-h:      80px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    ul { list-style: none; }
+    input, textarea, select { font-family: inherit; }
+
+    /* LOADER */
+    #loader { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:10000; transition:opacity 0.6s var(--ease-out),visibility 0.6s; }
+    #loader.hidden { opacity:0; visibility:hidden; }
+    .loader-logo { font-family:var(--font-disp); font-size:clamp(2.5rem,8vw,5rem); font-weight:300; letter-spacing:0.25em; color:var(--gold); animation:loaderPulse 1.5s ease-in-out infinite; }
+    .loader-line { width:0; height:1px; background:var(--gold); margin:1rem auto 0; animation:loaderLine 1.6s var(--ease-out) forwards; }
+    @keyframes loaderPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    @keyframes loaderLine { to{width:100%} }
+
+    /* SCROLL TOP */
+    #scrollTop { position:fixed; bottom:2rem; right:2rem; width:48px; height:48px; background:var(--gold); color:var(--bg); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; z-index:999; opacity:0; pointer-events:none; transform:translateY(12px); transition:opacity 0.3s,transform 0.3s; box-shadow:0 4px 20px rgba(201,168,76,0.35); }
+    #scrollTop.visible { opacity:1; pointer-events:auto; transform:translateY(0); }
+    #scrollTop:hover { background:var(--gold-light); }
+
+    /* FLOATING WHATSAPP */
+    #floatWA { position:fixed; bottom:5.5rem; right:2rem; width:52px; height:52px; background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:998; box-shadow:0 4px 24px rgba(37,211,102,0.4); transition:transform 0.3s var(--ease-out),box-shadow 0.3s; animation:waPulse 2.5s ease-in-out infinite; }
+    #floatWA:hover { transform:scale(1.12); box-shadow:0 6px 32px rgba(37,211,102,0.6); animation:none; }
+    #floatWA svg { width:26px; height:26px; fill:#fff; }
+    @keyframes waPulse { 0%,100%{box-shadow:0 4px 24px rgba(37,211,102,0.4)} 50%{box-shadow:0 4px 36px rgba(37,211,102,0.7)} }
+
+    /* NAVBAR */
+    #navbar { position:fixed; top:0; left:0; right:0; height:var(--nav-h); display:flex; align-items:center; padding:0 clamp(1.5rem,5vw,4rem); z-index:900; transition:background 0.4s,box-shadow 0.4s; }
+    #navbar.scrolled { background:rgba(10,10,10,0.96); backdrop-filter:blur(20px); box-shadow:0 1px 0 var(--border); }
+    .nav-brand { font-family:var(--font-disp); font-size:2rem; font-weight:400; letter-spacing:0.2em; color:var(--gold); flex:1; }
+    .nav-links { display:flex; gap:2.2rem; align-items:center; }
+    .nav-links a { font-size:0.78rem; font-weight:400; letter-spacing:0.18em; text-transform:uppercase; color:var(--cream-dim); position:relative; transition:color 0.2s; }
+    .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:1px; background:var(--gold); transition:width 0.3s var(--ease-out); }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-links a:hover::after { width:100%; }
+    .nav-reserve { margin-left:1rem; padding:0.55rem 1.4rem; border:1px solid var(--gold); color:var(--gold)!important; font-size:0.75rem!important; letter-spacing:0.18em; text-transform:uppercase; transition:background 0.25s,color 0.25s!important; }
+    .nav-reserve::after { display:none!important; }
+    .nav-reserve:hover { background:var(--gold); color:var(--bg)!important; }
+    .nav-cart-btn { position:relative; margin-left:1.2rem; color:var(--cream-dim); font-size:1.15rem; cursor:pointer; transition:color 0.2s; display:flex; align-items:center; gap:0.4rem; background:none; border:none; }
+    .nav-cart-btn:hover { color:var(--gold); }
+    .cart-badge { background:var(--gold); color:var(--bg); font-size:0.6rem; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; position:absolute; top:-8px; right:-8px; opacity:0; transform:scale(0); transition:opacity 0.2s,transform 0.2s; }
+    .cart-badge.show { opacity:1; transform:scale(1); }
+    .nav-toggle { display:none; flex-direction:column; gap:5px; padding:4px; cursor:pointer; margin-left:1rem; }
+    .nav-toggle span { display:block; width:24px; height:1.5px; background:var(--cream-dim); transition:transform 0.3s,opacity 0.3s; }
+    .nav-toggle.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity:0; }
+    .nav-toggle.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+    .mobile-menu { position:fixed; inset:0; background:rgba(10,10,10,0.98); backdrop-filter:blur(20px); z-index:850; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2.5rem; opacity:0; pointer-events:none; transition:opacity 0.4s var(--ease-out); }
+    .mobile-menu.open { opacity:1; pointer-events:auto; }
+    .mobile-menu a { font-family:var(--font-disp); font-size:clamp(2rem,7vw,3.5rem); font-weight:300; letter-spacing:0.1em; color:var(--cream-dim); opacity:0; transform:translateY(20px); transition:transform 0.4s var(--ease-out),opacity 0.4s,color 0.2s; }
+    .mobile-menu.open a { transform:translateY(0); opacity:1; }
+    .mobile-menu.open a:nth-child(1){transition-delay:0.05s} .mobile-menu.open a:nth-child(2){transition-delay:0.10s} .mobile-menu.open a:nth-child(3){transition-delay:0.15s} .mobile-menu.open a:nth-child(4){transition-delay:0.20s} .mobile-menu.open a:nth-child(5){transition-delay:0.25s}
+    .mobile-menu a:hover { color:var(--gold); }
+
+    /* CART DRAWER */
+    .cart-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:800; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+    .cart-overlay.open { opacity:1; pointer-events:auto; }
+    .cart-drawer { position:fixed; right:0; top:0; bottom:0; width:min(440px,100vw); background:var(--bg-2); border-left:1px solid var(--border); z-index:801; display:flex; flex-direction:column; transform:translateX(100%); transition:transform 0.4s var(--ease-out); padding:2rem; }
+    .cart-drawer.open { transform:translateX(0); }
+    .cart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+    .cart-header h3 { font-family:var(--font-disp); font-size:1.6rem; font-weight:400; letter-spacing:0.08em; color:var(--gold); }
+    .cart-close { font-size:1.4rem; color:var(--text-dim); transition:color 0.2s; }
+    .cart-close:hover { color:var(--text); }
+    .cart-items { flex:1; overflow-y:auto; }
+    .cart-item { display:flex; align-items:center; gap:1rem; padding:1rem 0; border-bottom:1px solid var(--border); }
+    .cart-item-img { width:56px; height:56px; border-radius:4px; object-fit:cover; flex-shrink:0; background:var(--bg-3); }
+    .cart-item-info { flex:1; min-width:0; }
+    .cart-item-name { font-size:0.85rem; font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cart-item-price { font-size:0.8rem; color:var(--gold); margin-top:2px; }
+    .cart-item-qty { display:flex; align-items:center; gap:0.5rem; flex-shrink:0; }
+    .qty-btn { width:26px; height:26px; border:1px solid var(--border-md); color:var(--text-dim); font-size:1rem; display:flex; align-items:center; justify-content:center; transition:border-color 0.2s,color 0.2s; }
+    .qty-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .qty-num { font-size:0.85rem; min-width:22px; text-align:center; }
+    .cart-remove { color:var(--text-dim); font-size:0.8rem; transition:color 0.2s; flex-shrink:0; }
+    .cart-remove:hover { color:var(--red); }
+    .cart-empty { text-align:center; color:var(--text-dim); padding:3rem 0; font-size:0.9rem; line-height:2; }
+    .cart-footer { padding-top:1.5rem; border-top:1px solid var(--border); }
+    .cart-subtotal { display:flex; justify-content:space-between; font-size:0.82rem; color:var(--text-dim); margin-bottom:0.4rem; }
+    .cart-delivery-fee { display:flex; justify-content:space-between; font-size:0.82rem; color:var(--text-dim); margin-bottom:0.4rem; }
+    .cart-delivery-fee .fee-note { font-size:0.7rem; color:var(--gold); font-style:italic; }
+    .cart-total { display:flex; justify-content:space-between; font-family:var(--font-disp); font-size:1.3rem; margin-bottom:1.5rem; color:var(--cream); }
+    .cart-total span:last-child { color:var(--gold); }
+    .btn-checkout { width:100%; padding:1rem; background:#25D366; color:#fff; font-family:var(--font-body); font-size:0.82rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:0.7rem; transition:background 0.2s; border-radius:2px; }
+    .btn-checkout:hover { background:#1ebe5d; }
+
+    /* CHECKOUT MODAL */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:1000; display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; pointer-events:none; transition:opacity 0.35s var(--ease-out); backdrop-filter:blur(6px); }
+    .modal-overlay.open { opacity:1; pointer-events:auto; }
+    .modal-box { background:var(--bg-2); border:1px solid var(--border); width:100%; max-width:580px; max-height:92vh; overflow-y:auto; padding:2.5rem; position:relative; transform:translateY(28px) scale(0.96); transition:transform 0.4s var(--ease-out); border-radius:4px; }
+    .modal-overlay.open .modal-box { transform:translateY(0) scale(1); }
+    .modal-close { position:absolute; top:1.2rem; right:1.4rem; font-size:1.3rem; color:var(--text-dim); transition:color 0.2s; z-index:2; }
+    .modal-close:hover { color:var(--text); }
+    .modal-title { font-family:var(--font-disp); font-size:1.9rem; font-weight:400; color:var(--cream); margin-bottom:0.4rem; }
+    .modal-sub { font-size:0.82rem; color:var(--text-dim); margin-bottom:2rem; line-height:1.7; }
+
+    .step-indicator { display:flex; align-items:center; margin-bottom:2rem; gap:0; }
+    .step-dot { display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; border:1px solid var(--border-md); font-size:0.72rem; font-weight:500; color:var(--text-dim); background:var(--bg-3); flex-shrink:0; transition:all 0.3s; position:relative; z-index:1; }
+    .step-dot.active { border-color:var(--gold); background:var(--gold); color:var(--bg); }
+    .step-dot.done { border-color:var(--gold); background:transparent; color:var(--gold); }
+    .step-label { font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-left:0.5rem; }
+    .step-label.active { color:var(--gold); }
+    .step-line { flex:1; height:1px; background:var(--border); margin:0 0.8rem; }
+    .step-line.done { background:var(--gold); }
+
+    .modal-order-summary { background:var(--bg-3); border:1px solid var(--border); padding:1.2rem; margin-bottom:1.8rem; border-radius:2px; }
+    .modal-order-title { font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; }
+    .modal-order-item { display:flex; justify-content:space-between; font-size:0.83rem; padding:0.3rem 0; color:var(--text-dim); }
+    .modal-order-item span:last-child { color:var(--cream); }
+    .modal-order-shipping { display:flex; justify-content:space-between; font-size:0.83rem; padding:0.3rem 0; color:var(--text-dim); border-top:1px dashed var(--border); margin-top:0.4rem; padding-top:0.6rem; }
+    .modal-order-shipping span:last-child { color:var(--gold-light); }
+    .modal-order-total { display:flex; justify-content:space-between; font-family:var(--font-disp); font-size:1.1rem; padding-top:0.8rem; margin-top:0.6rem; border-top:1px solid var(--border); }
+    .modal-order-total span:last-child { color:var(--gold); }
+
+    .delivery-toggle { display:flex; gap:0.8rem; margin-bottom:1.5rem; }
+    .delivery-opt { flex:1; padding:0.75rem; border:1px solid var(--border); text-align:center; cursor:pointer; font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); transition:all 0.2s; border-radius:2px; }
+    .delivery-opt.selected { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.08); }
+    .delivery-opt .dopt-icon { font-size:1.4rem; display:block; margin-bottom:0.3rem; }
+
+    .form-group { margin-bottom:1.1rem; }
+    .form-group label { display:block; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.45rem; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; background:var(--bg-3); border:1px solid var(--border); color:var(--text); padding:0.8rem 1rem; font-size:0.88rem; outline:none; transition:border-color 0.2s; -webkit-appearance:none; border-radius:2px; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--gold); }
+    .form-group input::placeholder, .form-group textarea::placeholder { color:var(--text-dim); }
+    .form-group select option { background:var(--bg-3); }
+    .form-group textarea { resize:vertical; min-height:80px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .form-error { font-size:0.72rem; color:var(--red); margin-top:4px; display:none; }
+    .form-error.show { display:block; }
+    .address-group { display:none; }
+    .address-group.show { display:block; }
+
+    .checkout-step { display:none; }
+    .checkout-step.active { display:block; animation:stepFadeIn 0.35s var(--ease-out); }
+    @keyframes stepFadeIn { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
+
+    .btn-continue { width:100%; padding:1rem; background:var(--gold); color:var(--bg); font-family:var(--font-body); font-size:0.82rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:0.6rem; transition:background 0.2s,transform 0.2s; margin-top:0.5rem; border-radius:2px; }
+    .btn-continue:hover { background:var(--gold-light); transform:translateY(-1px); }
+
+    .btn-back { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:1.5rem; transition:color 0.2s; background:none; border:none; cursor:pointer; padding:0; }
+    .btn-back:hover { color:var(--gold); }
+
+    /* PAYMENT SECTION */
+    .payment-section-title { font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+    .payment-methods { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:1.8rem; }
+    .payment-method-card { border:1px solid var(--border); padding:1.1rem; cursor:pointer; transition:all 0.25s var(--ease-out); text-align:center; border-radius:3px; position:relative; overflow:hidden; }
+    .payment-method-card::before { content:''; position:absolute; inset:0; background:rgba(201,168,76,0.04); opacity:0; transition:opacity 0.25s; }
+    .payment-method-card.selected { border-color:var(--gold); }
+    .payment-method-card.selected::before { opacity:1; }
+    .payment-method-card input[type="radio"] { display:none; }
+    .pm-icon { font-size:1.8rem; display:block; margin-bottom:0.5rem; }
+    .pm-name { font-size:0.78rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--cream); }
+    .pm-desc { font-size:0.7rem; color:var(--text-dim); margin-top:0.3rem; line-height:1.5; }
+    .pm-check { position:absolute; top:0.6rem; right:0.7rem; width:18px; height:18px; border:1px solid var(--border-md); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.65rem; color:transparent; transition:all 0.2s; }
+    .payment-method-card.selected .pm-check { border-color:var(--gold); background:var(--gold); color:var(--bg); }
+
+    /* BANK TRANSFER CARD */
+    #bankTransferDetails { display:none; margin-bottom:1.6rem; animation:stepFadeIn 0.4s var(--ease-out); }
+    #bankTransferDetails.show { display:block; }
+    .bank-card { position:relative; background:linear-gradient(135deg,#1a1408 0%,#0f0d07 40%,#1c1609 100%); border:1px solid rgba(201,168,76,0.4); border-radius:12px; padding:2rem; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.6),inset 0 1px 0 rgba(201,168,76,0.2); }
+    .bank-card::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%); pointer-events:none; }
+    .bank-card::after { content:''; position:absolute; bottom:-40px; left:-40px; width:180px; height:180px; background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 70%); pointer-events:none; }
+    .bank-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
+    .bank-card-logo { font-family:var(--font-disp); font-size:1.4rem; font-weight:500; color:var(--gold); letter-spacing:0.08em; }
+    .bank-card-tag { font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-dim); border:1px solid rgba(201,168,76,0.25); padding:0.2rem 0.6rem; border-radius:20px; }
+    .bank-card-chip { width:38px; height:28px; background:linear-gradient(135deg,var(--gold-dim),var(--gold)); border-radius:4px; margin-bottom:1.4rem; box-shadow:0 2px 8px rgba(201,168,76,0.3); position:relative; overflow:hidden; }
+    .bank-card-chip::before { content:''; position:absolute; inset:4px; border:1px solid rgba(255,255,255,0.2); border-radius:2px; }
+    .bank-card-chip::after { content:''; position:absolute; top:50%; left:0; right:0; height:1px; background:rgba(255,255,255,0.15); transform:translateY(-50%); }
+    .bank-acct-label { font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(201,168,76,0.6); margin-bottom:0.4rem; }
+    .bank-acct-number { font-family:'Courier New',monospace; font-size:1.55rem; font-weight:700; color:var(--cream); letter-spacing:0.22em; margin-bottom:1.5rem; text-shadow:0 2px 8px rgba(0,0,0,0.5); }
+    .bank-card-footer { display:flex; align-items:flex-end; justify-content:space-between; }
+    .bank-field-label { font-size:0.6rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(201,168,76,0.55); display:block; margin-bottom:0.2rem; }
+    .bank-field-value { font-size:0.88rem; font-weight:500; color:var(--cream); letter-spacing:0.04em; }
+    .bank-secure-badge { display:flex; align-items:center; gap:0.4rem; font-size:0.65rem; color:rgba(201,168,76,0.5); letter-spacing:0.1em; }
+    .bank-secure-badge span { font-size:0.9rem; }
+    .copy-acct-btn { display:flex; align-items:center; gap:0.5rem; margin-top:1rem; padding:0.7rem 1.2rem; border:1px solid rgba(201,168,76,0.4); background:rgba(201,168,76,0.06); color:var(--gold); font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; font-family:var(--font-body); border-radius:3px; width:100%; justify-content:center; transition:all 0.25s; cursor:pointer; }
+    .copy-acct-btn:hover { background:rgba(201,168,76,0.14); border-color:var(--gold); }
+    .copy-acct-btn.copied { background:rgba(37,211,102,0.1); border-color:#25D366; color:#25D366; }
+    .bank-instruction { background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:3px; padding:1rem 1.2rem; margin-top:1rem; font-size:0.78rem; color:var(--text-dim); line-height:1.7; }
+    .bank-instruction strong { color:var(--gold); display:block; margin-bottom:0.3rem; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; }
+
+    /* COD */
+    #codDetails { display:none; margin-bottom:1.6rem; animation:stepFadeIn 0.4s var(--ease-out); }
+    #codDetails.show { display:block; }
+    .cod-message { background:rgba(37,211,102,0.06); border:1px solid rgba(37,211,102,0.25); border-radius:3px; padding:1.4rem; text-align:center; }
+    .cod-icon { font-size:2.5rem; margin-bottom:0.8rem; }
+    .cod-title { font-family:var(--font-disp); font-size:1.3rem; color:var(--cream); margin-bottom:0.5rem; }
+    .cod-text { font-size:0.83rem; color:var(--text-dim); line-height:1.8; }
+    .cod-text strong { color:#25D366; }
+
+    .btn-place-order { width:100%; padding:1.1rem; background:#25D366; color:#fff; font-family:var(--font-body); font-size:0.85rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:0.7rem; transition:background 0.2s,transform 0.2s; border-radius:2px; margin-top:0.5rem; border:none; cursor:pointer; }
+    .btn-place-order:hover { background:#1ebe5d; transform:translateY(-1px); }
+
+    .security-strip { display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-top:1.2rem; font-size:0.68rem; color:var(--text-dim); letter-spacing:0.1em; }
+    .security-strip span { color:var(--gold); font-size:0.8rem; }
+
+    /* RESERVATION SUCCESS MODAL */
+    .success-panel { display:none; text-align:center; padding:2.5rem 1.5rem; }
+    .success-panel.show { display:block; }
+    .success-icon { font-size:3.5rem; margin-bottom:1rem; }
+    .success-title { font-family:var(--font-disp); font-size:2rem; font-weight:400; color:var(--gold); margin-bottom:0.8rem; }
+    .success-msg { font-size:0.88rem; color:var(--text-dim); line-height:1.9; }
+    .success-name { color:var(--cream); font-weight:500; }
+
+    .btn-submit { width:100%; padding:1rem; background:var(--gold); color:var(--bg); font-family:var(--font-body); font-size:0.82rem; font-weight:500; letter-spacing:0.15em; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:0.7rem; transition:background 0.2s,opacity 0.2s; margin-top:0.5rem; position:relative; }
+    .btn-submit:hover:not(:disabled) { background:var(--gold-light); }
+    .btn-submit:disabled { opacity:0.65; cursor:not-allowed; }
+    .btn-submit .spinner { width:16px; height:16px; border:2px solid rgba(10,10,10,0.4); border-top-color:var(--bg); border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+    .btn-submit.loading .spinner { display:block; }
+    .btn-submit.loading .btn-label { opacity:0.6; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* UTILITIES */
+    .section { padding:clamp(5rem,12vw,9rem) clamp(1.5rem,6vw,6rem); }
+    .section-tag { font-size:0.72rem; font-weight:500; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:1rem; }
+    .section-title { font-family:var(--font-disp); font-size:clamp(2.2rem,5vw,3.8rem); font-weight:300; line-height:1.15; color:var(--cream); }
+    .section-title em { font-style:italic; color:var(--gold); }
+    .section-subtitle { font-size:0.9rem; color:var(--text-dim); max-width:500px; margin-top:1rem; line-height:1.8; }
+    .gold-rule { width:48px; height:1px; background:var(--gold); margin:1.5rem 0; }
+    .btn-primary { display:inline-flex; align-items:center; gap:0.7rem; padding:0.85rem 2.2rem; background:var(--gold); color:var(--bg); font-size:0.78rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; transition:background 0.25s,transform 0.2s; }
+    .btn-primary:hover { background:var(--gold-light); transform:translateY(-1px); }
+    .btn-outline { display:inline-flex; align-items:center; gap:0.7rem; padding:0.85rem 2.2rem; border:1px solid var(--gold); color:var(--gold); font-size:0.78rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; transition:background 0.25s,color 0.25s,transform 0.2s; }
+    .btn-outline:hover { background:var(--gold); color:var(--bg); transform:translateY(-1px); }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s var(--ease-out),transform 0.7s var(--ease-out); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-left { opacity:0; transform:translateX(-30px); transition:opacity 0.7s var(--ease-out),transform 0.7s var(--ease-out); }
+    .reveal-left.visible { opacity:1; transform:translateX(0); }
+    .reveal-right { opacity:0; transform:translateX(30px); transition:opacity 0.7s var(--ease-out),transform 0.7s var(--ease-out); }
+    .reveal-right.visible { opacity:1; transform:translateX(0); }
+
+    /* HERO */
+    #hero { min-height:100vh; display:flex; align-items:center; position:relative; overflow:hidden; padding:var(--nav-h) clamp(1.5rem,6vw,6rem) 0; }
+    .hero-bg { position:absolute; inset:0; background:linear-gradient(to bottom right,rgba(0,0,0,0.85) 40%,rgba(0,0,0,0.4)),url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&q=80') center/cover no-repeat; transform:scale(1.05); animation:heroBgZoom 12s ease-in-out forwards; }
+    @keyframes heroBgZoom { to{transform:scale(1)} }
+    .hero-grain { position:absolute; inset:0; opacity:0.35; pointer-events:none; }
+    .hero-content { position:relative; z-index:2; max-width:740px; }
+    .hero-eyebrow { font-size:0.72rem; letter-spacing:0.35em; text-transform:uppercase; color:var(--gold); opacity:0; animation:fadeSlideUp 0.8s 0.8s var(--ease-out) forwards; }
+    .hero-title { font-family:var(--font-disp); font-size:clamp(3.5rem,9vw,8rem); font-weight:300; line-height:1.0; color:var(--cream); margin:1rem 0 1.5rem; opacity:0; animation:fadeSlideUp 0.9s 1s var(--ease-out) forwards; }
+    .hero-title em { font-style:italic; color:var(--gold); }
+    .hero-desc { font-size:1rem; color:var(--cream-dim); max-width:440px; line-height:1.9; opacity:0; animation:fadeSlideUp 0.9s 1.2s var(--ease-out) forwards; }
+    .hero-actions { display:flex; gap:1.2rem; flex-wrap:wrap; margin-top:2.5rem; opacity:0; animation:fadeSlideUp 0.9s 1.4s var(--ease-out) forwards; }
+    @keyframes fadeSlideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .hero-scroll { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:0.5rem; z-index:2; opacity:0; animation:fadeIn 1s 2s forwards; color:var(--text-dim); font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; }
+    .hero-scroll-line { width:1px; height:40px; background:linear-gradient(to bottom,var(--gold),transparent); animation:scrollLine 1.5s ease-in-out infinite; }
+    @keyframes scrollLine { 0%,100%{transform:scaleY(1);transform-origin:top} 50%{transform:scaleY(0.4)} }
+    @keyframes fadeIn { to{opacity:1} }
+    .hero-stats { position:absolute; bottom:0; right:0; display:flex; background:rgba(20,20,20,0.9); backdrop-filter:blur(10px); border-top:1px solid var(--border); border-left:1px solid var(--border); z-index:2; }
+    .hero-stat { padding:1.4rem 2.2rem; border-right:1px solid var(--border); text-align:center; }
+    .hero-stat:last-child { border-right:none; }
+    .stat-num { font-family:var(--font-disp); font-size:2rem; font-weight:400; color:var(--gold); line-height:1; }
+    .stat-label { font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--text-dim); margin-top:4px; }
+
+    /* ABOUT */
+    #about { background:var(--bg-2); }
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(3rem,6vw,6rem); align-items:center; }
+    .about-images { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto auto; gap:1rem; position:relative; }
+    .about-img { aspect-ratio:3/4; object-fit:cover; width:100%; }
+    .about-img-main { grid-row:span 2; }
+    .about-img-side { aspect-ratio:4/3; }
+    .about-badge { position:absolute; bottom:-1.5rem; left:-1.5rem; background:var(--gold); color:var(--bg); padding:1.2rem 1.5rem; font-family:var(--font-disp); text-align:center; }
+    .about-badge .num { font-size:2.5rem; font-weight:400; line-height:1; }
+    .about-badge .lbl { font-size:0.7rem; letter-spacing:0.12em; display:block; margin-top:2px; }
+    .about-p { font-size:0.92rem; color:var(--text-dim); line-height:1.9; margin-bottom:1.2rem; }
+    .chef-mini { display:flex; align-items:center; gap:1rem; margin-top:2rem; padding-top:2rem; border-top:1px solid var(--border); }
+    .chef-mini img { width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); }
+    .chef-mini-name { font-family:var(--font-disp); font-size:1.1rem; color:var(--cream); }
+    .chef-mini-role { font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); }
+
+    /* MENU */
+    #menu { background:var(--bg); }
+    .menu-header { text-align:center; margin-bottom:3rem; }
+    .menu-header .section-subtitle { margin:1rem auto 0; }
+    .menu-tabs { display:flex; justify-content:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:2rem; }
+    .menu-tab { padding:0.5rem 1.4rem; border:1px solid var(--border); color:var(--text-dim); font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; font-family:var(--font-body); transition:background 0.2s,border-color 0.2s,color 0.2s; }
+    .menu-tab:hover, .menu-tab.active { background:var(--gold); border-color:var(--gold); color:var(--bg); }
+
+    /* MENU SEARCH BAR */
+    .menu-search-wrap { display:flex; justify-content:center; margin-bottom:2.5rem; }
+    .menu-search-box { position:relative; width:100%; max-width:460px; }
+    .menu-search-box .search-icon { position:absolute; left:1rem; top:50%; transform:translateY(-50%); font-size:1rem; color:var(--text-dim); pointer-events:none; transition:color 0.2s; }
+    .menu-search-box input { width:100%; background:var(--bg-card); border:1px solid var(--border); color:var(--text); padding:0.85rem 3rem 0.85rem 2.8rem; font-size:0.88rem; font-family:var(--font-body); outline:none; border-radius:2px; transition:border-color 0.25s,box-shadow 0.25s; letter-spacing:0.04em; }
+    .menu-search-box input::placeholder { color:var(--text-dim); }
+    .menu-search-box input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,0.1); }
+    .menu-search-box input:focus ~ .search-icon { color:var(--gold); }
+    .menu-search-clear { position:absolute; right:0.8rem; top:50%; transform:translateY(-50%); width:22px; height:22px; background:var(--bg-3); border:1px solid var(--border); border-radius:50%; color:var(--text-dim); font-size:0.7rem; display:none; align-items:center; justify-content:center; cursor:pointer; transition:border-color 0.2s,color 0.2s; }
+    .menu-search-clear:hover { border-color:var(--gold); color:var(--gold); }
+    .menu-search-clear.show { display:flex; }
+    .menu-no-results { text-align:center; padding:3rem 0; color:var(--text-dim); font-size:0.9rem; line-height:2; grid-column:1/-1; }
+    .menu-no-results .no-results-icon { font-size:2.5rem; display:block; margin-bottom:0.5rem; }
+    /* Menu loading state */
+    .menu-loading { text-align:center; padding:3rem 0; color:var(--text-dim); font-size:0.9rem; grid-column:1/-1; }
+    .menu-loading-spinner { width:32px; height:32px; border:2px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem; }
+
+    .menu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:2rem; }
+    .menu-card { background:var(--bg-card); border:1px solid var(--border); overflow:hidden; transition:transform 0.35s var(--ease-out),box-shadow 0.35s; display:none; }
+    .menu-card.active-card { display:flex; flex-direction:column; }
+    .menu-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-md); }
+    .menu-card-img { position:relative; overflow:hidden; height:220px; }
+    .menu-card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s var(--ease-out); }
+    .menu-card:hover .menu-card-img img { transform:scale(1.07); }
+    .menu-card-badge { position:absolute; top:1rem; left:1rem; padding:0.25rem 0.7rem; background:var(--gold); color:var(--bg); font-size:0.62rem; letter-spacing:0.15em; text-transform:uppercase; font-weight:500; }
+    .menu-card-body { padding:1.4rem; flex:1; display:flex; flex-direction:column; }
+    .menu-card-name { font-family:var(--font-disp); font-size:1.35rem; font-weight:400; color:var(--cream); margin-bottom:0.4rem; }
+    .menu-card-desc { font-size:0.82rem; color:var(--text-dim); line-height:1.7; flex:1; }
+    .menu-card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:1.2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .menu-card-price { font-family:var(--font-disp); font-size:1.3rem; color:var(--gold); }
+    .add-to-cart { display:flex; align-items:center; gap:0.5rem; padding:0.5rem 1rem; border:1px solid var(--gold); color:var(--gold); font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; font-family:var(--font-body); transition:background 0.2s,color 0.2s; }
+    .add-to-cart:hover { background:var(--gold); color:var(--bg); }
+
+    /* CHEFS */
+    #chefs { background:var(--bg-2); }
+    .chefs-header { text-align:center; margin-bottom:4rem; }
+    .chefs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:2rem; }
+    .chef-card { background:var(--bg-card); border:1px solid var(--border); overflow:hidden; transition:transform 0.35s var(--ease-out),box-shadow 0.35s; position:relative; }
+    .chef-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-md); }
+    .chef-img { height:340px; position:relative; overflow:hidden; }
+    .chef-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s var(--ease-out); }
+    .chef-card:hover .chef-img img { transform:scale(1.06); }
+    .chef-social { position:absolute; bottom:1rem; right:1rem; display:flex; flex-direction:column; gap:0.5rem; opacity:0; transform:translateX(10px); transition:opacity 0.3s,transform 0.3s; }
+    .chef-card:hover .chef-social { opacity:1; transform:translateX(0); }
+    .chef-social a { width:32px; height:32px; background:var(--gold); color:var(--bg); display:flex; align-items:center; justify-content:center; font-size:0.75rem; }
+    .chef-info { padding:1.4rem; }
+    .chef-name { font-family:var(--font-disp); font-size:1.4rem; font-weight:400; color:var(--cream); }
+    .chef-role { font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-top:4px; }
+    .chef-bio { font-size:0.82rem; color:var(--text-dim); margin-top:0.7rem; line-height:1.7; }
+
+    /* GALLERY */
+    #gallery { background:var(--bg); }
+    .gallery-header { text-align:center; margin-bottom:3rem; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(2,240px); gap:1rem; }
+    .gallery-item { overflow:hidden; position:relative; cursor:pointer; }
+    .gallery-item:nth-child(1) { grid-column:span 2; grid-row:span 2; }
+    .gallery-item:nth-child(4) { grid-column:span 2; }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s var(--ease-out); }
+    .gallery-item:hover img { transform:scale(1.07); }
+    .gallery-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.3s; }
+    .gallery-item:hover .gallery-overlay { opacity:1; }
+    .gallery-overlay span { color:var(--gold); font-size:1.4rem; }
+
+    /* TESTIMONIALS */
+    #testimonials { background:var(--bg-2); }
+    .testimonials-header { text-align:center; margin-bottom:4rem; }
+    .slider-wrap { position:relative; overflow:hidden; }
+    .slider-track { display:flex; transition:transform 0.6s var(--ease-out); }
+    .testimonial-card { min-width:100%; padding:0 clamp(1rem,8vw,8rem); text-align:center; }
+    .testi-quote { font-family:var(--font-disp); font-size:clamp(1.2rem,3vw,1.8rem); font-weight:300; font-style:italic; line-height:1.6; color:var(--cream); margin-bottom:2rem; }
+    .testi-stars { color:var(--gold); letter-spacing:4px; font-size:1rem; margin-bottom:1.5rem; }
+    .testi-author { font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--text-dim); }
+    .testi-author span { color:var(--gold); }
+    .slider-dots { display:flex; justify-content:center; gap:0.6rem; margin-top:2.5rem; }
+    .slider-dot { width:28px; height:2px; background:var(--border-md); transition:background 0.3s,width 0.3s; cursor:pointer; }
+    .slider-dot.active { background:var(--gold); width:48px; }
+    .slider-arrows { display:flex; justify-content:center; gap:1rem; margin-top:2rem; }
+    .slider-btn { width:44px; height:44px; border:1px solid var(--border-md); color:var(--text-dim); display:flex; align-items:center; justify-content:center; font-size:1rem; transition:border-color 0.2s,color 0.2s; }
+    .slider-btn:hover { border-color:var(--gold); color:var(--gold); }
+
+    /* RESERVATIONS */
+    #reservations { background:var(--bg); position:relative; overflow:hidden; }
+    .res-bg { position:absolute; right:0; top:0; bottom:0; width:45%; background:url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&q=80') center/cover no-repeat; opacity:0.15; }
+    .res-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(3rem,6vw,6rem); position:relative; z-index:1; }
+    .res-form-wrap { background:var(--bg-card); border:1px solid var(--border); padding:clamp(2rem,4vw,3rem); }
+    .res-form-title { font-family:var(--font-disp); font-size:1.8rem; font-weight:400; color:var(--cream); margin-bottom:2rem; }
+    .res-info-title { font-family:var(--font-disp); font-size:clamp(2rem,4vw,3rem); font-weight:300; color:var(--cream); margin-bottom:1rem; }
+    .res-info-title em { font-style:italic; color:var(--gold); }
+    .res-info-p { font-size:0.9rem; color:var(--text-dim); line-height:1.9; margin-bottom:2rem; }
+    .hours-list { margin-top:2rem; }
+    .hours-item { display:flex; justify-content:space-between; padding:0.9rem 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
+    .hours-item:last-child { border-bottom:none; }
+    .hours-day { color:var(--text-dim); letter-spacing:0.08em; }
+    .hours-time { color:var(--cream); }
+    .hours-closed { color:var(--red)!important; }
+    .emailjs-notice { background:rgba(201,168,76,0.08); border:1px solid var(--border-md); padding:1rem 1.4rem; margin-bottom:1.5rem; font-size:0.78rem; color:var(--text-dim); line-height:1.7; border-radius:2px; }
+    .emailjs-notice strong { color:var(--gold); display:block; margin-bottom:4px; }
+    .emailjs-notice code { background:var(--bg-3); padding:1px 5px; color:var(--cream-dim); font-size:0.75rem; }
+
+    /* FAQ */
+    #faq { background:var(--bg-2); }
+    .faq-header { text-align:center; margin-bottom:4rem; }
+    .faq-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:960px; margin:0 auto; }
+    .faq-item { border:1px solid var(--border); overflow:hidden; }
+    .faq-q { display:flex; align-items:center; justify-content:space-between; padding:1.2rem 1.4rem; cursor:pointer; font-size:0.88rem; color:var(--cream); transition:color 0.2s; font-weight:400; gap:1rem; }
+    .faq-q:hover { color:var(--gold); }
+    .faq-icon { width:20px; height:20px; flex-shrink:0; border:1px solid var(--border-md); display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:var(--gold); transition:transform 0.3s,background 0.3s; }
+    .faq-item.open .faq-icon { transform:rotate(45deg); background:var(--gold); color:var(--bg); border-color:var(--gold); }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height 0.4s var(--ease-out),padding 0.3s; font-size:0.83rem; color:var(--text-dim); line-height:1.8; padding:0 1.4rem; }
+    .faq-item.open .faq-a { max-height:200px; padding:0 1.4rem 1.4rem; }
+
+    /* CONTACT */
+    #contact { background:var(--bg); }
+    .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:clamp(3rem,6vw,6rem); align-items:start; }
+    .contact-info-title { font-family:var(--font-disp); font-size:clamp(2rem,4vw,3rem); font-weight:300; color:var(--cream); margin-bottom:2rem; }
+    .contact-info-title em { font-style:italic; color:var(--gold); }
+    .contact-detail { display:flex; gap:1.2rem; align-items:flex-start; margin-bottom:1.8rem; }
+    .contact-icon { width:40px; height:40px; flex-shrink:0; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:0.9rem; }
+    .contact-detail-lbl { font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:3px; }
+    .contact-detail-val { font-size:0.88rem; color:var(--cream); }
+    .map-placeholder { width:100%; height:200px; background:var(--bg-3); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin-top:2rem; color:var(--text-dim); font-size:0.82rem; letter-spacing:0.12em; text-transform:uppercase; position:relative; overflow:hidden; }
+    .map-placeholder::before { content:''; position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=60') center/cover; opacity:0.12; }
+    .map-placeholder span { position:relative; z-index:1; }
+    .contact-form-wrap { background:var(--bg-card); border:1px solid var(--border); padding:clamp(2rem,4vw,3rem); }
+
+    /* COUNTERS */
+    .counters-band { background:var(--gold); padding:3.5rem clamp(1.5rem,6vw,6rem); display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
+    .counter-item { text-align:center; }
+    .counter-num { font-family:var(--font-disp); font-size:clamp(2.5rem,5vw,4rem); font-weight:400; color:var(--bg); line-height:1; }
+    .counter-lbl { font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:rgba(10,10,10,0.65); margin-top:6px; }
+
+    /* NEWSLETTER */
+    #newsletter { background:var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:clamp(4rem,8vw,6rem) clamp(1.5rem,6vw,6rem); text-align:center; }
+    .newsletter-title { font-family:var(--font-disp); font-size:clamp(2rem,5vw,3.5rem); font-weight:300; color:var(--cream); margin-bottom:1rem; }
+    .newsletter-title em { font-style:italic; color:var(--gold); }
+    .newsletter-sub { font-size:0.88rem; color:var(--text-dim); margin-bottom:2.5rem; }
+    .newsletter-form { display:flex; max-width:480px; margin:0 auto; border:1px solid var(--border); }
+    .newsletter-form input { flex:1; background:var(--bg-3); border:none; outline:none; color:var(--text); padding:0.9rem 1.2rem; font-size:0.85rem; font-family:var(--font-body); }
+    .newsletter-form input::placeholder { color:var(--text-dim); }
+    .newsletter-form button { background:var(--gold); color:var(--bg); padding:0.9rem 1.5rem; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; font-family:var(--font-body); font-weight:500; transition:background 0.2s; }
+    .newsletter-form button:hover { background:var(--gold-light); }
+
+    /* FOOTER */
+    footer { background:var(--bg-2); padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,6rem) 2rem; border-top:1px solid var(--border); }
+    .footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:clamp(2rem,4vw,4rem); margin-bottom:3rem; }
+    .footer-brand { font-family:var(--font-disp); font-size:2rem; font-weight:400; letter-spacing:0.2em; color:var(--gold); display:block; margin-bottom:1rem; }
+    .footer-tagline { font-size:0.82rem; color:var(--text-dim); line-height:1.8; margin-bottom:1.5rem; }
+    .footer-socials { display:flex; gap:0.8rem; }
+    .social-link { width:36px; height:36px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:0.8rem; transition:border-color 0.2s,color 0.2s; }
+    .social-link:hover { border-color:var(--gold); color:var(--gold); }
+    .footer-col-title { font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; }
+    .footer-links { display:flex; flex-direction:column; gap:0.7rem; }
+    .footer-links a { font-size:0.83rem; color:var(--text-dim); transition:color 0.2s; }
+    .footer-links a:hover { color:var(--cream); }
+    .footer-bottom { display:flex; align-items:center; justify-content:space-between; padding-top:2rem; border-top:1px solid var(--border); font-size:0.75rem; color:var(--text-dim); flex-wrap:wrap; gap:0.5rem; }
+    .footer-bottom a { color:var(--gold); }
+
+    /* TOAST */
+    #toast { position:fixed; bottom:5rem; left:50%; transform:translateX(-50%) translateY(20px); background:var(--bg-card); border:1px solid var(--gold); color:var(--cream); padding:0.8rem 1.8rem; font-size:0.83rem; letter-spacing:0.08em; z-index:9999; white-space:nowrap; opacity:0; transition:opacity 0.3s,transform 0.3s; pointer-events:none; border-radius:2px; }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* OWNER PANEL */
+    #ownerPanelBtn { position:fixed; bottom:2rem; left:2rem; width:48px; height:48px; background:var(--bg-3); border:1px solid var(--border); color:var(--text-dim); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; z-index:998; cursor:pointer; transition:border-color 0.2s,color 0.2s; }
+    #ownerPanelBtn:hover { border-color:var(--gold); color:var(--gold); }
+    .owner-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:2000; display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+    .owner-overlay.open { opacity:1; pointer-events:auto; }
+    .owner-box { background:var(--bg-2); border:1px solid var(--border); width:100%; max-width:860px; max-height:92vh; overflow-y:auto; padding:2.5rem; position:relative; }
+    .owner-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; padding-bottom:1.2rem; border-bottom:1px solid var(--border); }
+    .owner-title { font-family:var(--font-disp); font-size:2rem; font-weight:400; color:var(--gold); }
+    .owner-close { font-size:1.4rem; color:var(--text-dim); transition:color 0.2s; }
+    .owner-close:hover { color:var(--text); }
+    .owner-tabs { display:flex; gap:0.5rem; margin-bottom:2rem; flex-wrap:wrap; }
+    .owner-tab { padding:0.5rem 1.2rem; border:1px solid var(--border); color:var(--text-dim); font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; transition:all 0.2s; }
+    .owner-tab.active { background:var(--gold); border-color:var(--gold); color:var(--bg); }
+    .owner-product-list { display:flex; flex-direction:column; gap:0.8rem; margin-bottom:2rem; max-height:320px; overflow-y:auto; }
+    .owner-product-row { display:flex; align-items:center; gap:1rem; padding:0.9rem 1rem; background:var(--bg-3); border:1px solid var(--border); }
+    .owner-product-row img { width:50px; height:50px; object-fit:cover; flex-shrink:0; }
+    .owner-product-info { flex:1; min-width:0; }
+    .owner-product-name { font-size:0.88rem; color:var(--cream); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .owner-product-meta { font-size:0.72rem; color:var(--text-dim); margin-top:2px; }
+    .owner-product-actions { display:flex; gap:0.5rem; flex-shrink:0; }
+    .owner-btn-edit { padding:0.3rem 0.8rem; border:1px solid var(--gold); color:var(--gold); font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; transition:all 0.2s; }
+    .owner-btn-edit:hover { background:var(--gold); color:var(--bg); }
+    .owner-btn-del { padding:0.3rem 0.8rem; border:1px solid var(--red); color:var(--red); font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; transition:all 0.2s; }
+    .owner-btn-del:hover { background:var(--red); color:#fff; }
+    .owner-form-title { font-family:var(--font-disp); font-size:1.4rem; font-weight:400; color:var(--cream); margin-bottom:1.4rem; }
+    .owner-add-btn { padding:0.65rem 1.4rem; background:var(--gold); color:var(--bg); font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; font-weight:500; transition:background 0.2s; display:inline-flex; align-items:center; gap:0.5rem; }
+    .owner-add-btn:hover { background:var(--gold-light); }
+    .login-wrap { max-width:360px; margin:0 auto; text-align:center; }
+    .login-wrap h3 { font-family:var(--font-disp); font-size:1.8rem; font-weight:400; color:var(--cream); margin-bottom:0.5rem; }
+    .login-wrap p { font-size:0.82rem; color:var(--text-dim); margin-bottom:2rem; }
+    .login-err { font-size:0.78rem; color:var(--red); margin-top:0.8rem; display:none; }
+    .login-err.show { display:block; }
+    .config-section { background:var(--bg-3); border:1px solid var(--border); padding:1.5rem; margin-bottom:1.5rem; }
+    .config-section h4 { font-family:var(--font-disp); font-size:1.2rem; color:var(--gold); margin-bottom:0.3rem; }
+    .config-section p { font-size:0.78rem; color:var(--text-dim); margin-bottom:1.2rem; line-height:1.7; }
+    .config-save-btn { padding:0.6rem 1.4rem; background:var(--gold); color:var(--bg); font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; font-weight:500; transition:background 0.2s; margin-top:1rem; }
+    .config-save-btn:hover { background:var(--gold-light); }
+    .config-status { font-size:0.75rem; margin-top:0.6rem; display:none; }
+    .config-status.ok { color:var(--green); display:block; }
+    .config-status.err { color:var(--red); display:block; }
+    .img-upload-wrap { position:relative; }
+    .img-upload-preview { width:100%; height:120px; background:var(--bg-3); border:2px dashed var(--border-md); border-radius:3px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem; cursor:pointer; transition:border-color 0.2s; overflow:hidden; margin-top:0.45rem; }
+    .img-upload-preview:hover { border-color:var(--gold); }
+    .img-upload-preview img { width:100%; height:100%; object-fit:cover; display:none; }
+    .img-upload-placeholder { display:flex; flex-direction:column; align-items:center; gap:0.4rem; }
+    .img-upload-icon { font-size:1.8rem; }
+    .img-upload-text { font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); }
+    .img-upload-sub { font-size:0.65rem; color:var(--text-dim); opacity:0.7; }
+    .img-upload-preview input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; z-index:2; }
+
+    /* JSONBIN SYNC STATUS */
+    .sync-indicator { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.7rem; color:var(--text-dim); padding:0.3rem 0.7rem; border:1px solid var(--border); border-radius:2px; }
+    .sync-indicator.synced { color:var(--green); border-color:rgba(37,211,102,0.3); }
+    .sync-indicator.syncing { color:var(--gold); border-color:var(--border-md); }
+    .sync-indicator.error { color:var(--red); border-color:rgba(201,76,76,0.3); }
+    .sync-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+    .sync-dot.pulse { animation:syncPulse 1s ease-in-out infinite; }
+    @keyframes syncPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){
+      .about-grid{grid-template-columns:1fr} .about-images{display:none}
+      .res-grid{grid-template-columns:1fr} .contact-grid{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+      .gallery-item:nth-child(1){grid-column:span 2;grid-row:span 1} .gallery-item:nth-child(4){grid-column:span 1}
+      .faq-grid{grid-template-columns:1fr} .counters-band{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:768px){
+      /* ✅ FIX 1: Cart icon now visible on mobile — moved next to hamburger */
+      .nav-links{display:none}
+      .nav-toggle{display:flex}
+      .nav-cart-btn{margin-left:auto; margin-right:0.3rem; display:flex;}
+      .hero-stats{display:none} .chefs-grid{grid-template-columns:1fr 1fr}
+      .footer-grid{grid-template-columns:1fr} .form-row{grid-template-columns:1fr}
+      .delivery-toggle{flex-direction:column} .owner-product-row{flex-wrap:wrap}
+      .payment-methods{grid-template-columns:1fr}
+      .bank-acct-number{font-size:1.2rem;letter-spacing:0.14em}
+      #floatWA{bottom:5rem}
+    }
+    @media(max-width:480px){
+      .chefs-grid{grid-template-columns:1fr}
+      .gallery-grid{grid-template-columns:1fr}
+      .gallery-item:nth-child(1),.gallery-item:nth-child(4){grid-column:span 1}
+      .counters-band{grid-template-columns:1fr 1fr} .modal-box{padding:1.5rem}
+      .step-label{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div>
+    <div class="loader-logo">VELOUR</div>
+    <div class="loader-line"></div>
+  </div>
+</div>
+
+<button id="scrollTop" aria-label="Scroll to top">↑</button>
+
+<a id="floatWA" href="https://wa.me/2348027558472" target="_blank" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<div id="toast"></div>
+<button id="ownerPanelBtn" title="Owner Panel" onclick="openOwnerPanel()">⚙</button>
+
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="closeMobileMenu()">Home</a>
+  <a href="#menu" onclick="closeMobileMenu()">Menu</a>
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#reservations" onclick="closeMobileMenu()">Reservations</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+</nav>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Order</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">₦0.00</span></div>
+    <div class="cart-delivery-fee" id="cartDeliveryFeeRow">
+      <span>Delivery Fee <em class="fee-note">(Victoria Island)</em></span>
+      <span id="cartDeliveryFeeAmt">₦700</span>
+    </div>
+    <div class="cart-total"><span>Total</span><span id="cartTotal">₦0.00</span></div>
+    <button class="btn-checkout" onclick="openCheckout()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+      Proceed to Checkout
+    </button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeCheckout()">✕</button>
+
+    <div class="step-indicator" id="stepIndicator">
+      <div class="step-dot active" id="stepDot1">1</div>
+      <span class="step-label active" id="stepLabel1">Your Details</span>
+      <div class="step-line" id="stepLine1"></div>
+      <div class="step-dot" id="stepDot2">2</div>
+      <span class="step-label" id="stepLabel2">Payment</span>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="checkout-step active" id="checkoutStep1">
+      <div class="modal-title">Your Details</div>
+      <p class="modal-sub">Fill in your info so we can process your order correctly.</p>
+
+      <div class="modal-order-summary">
+        <div class="modal-order-title">Order Summary</div>
+        <div id="modalOrderItems"></div>
+        <div class="modal-order-shipping" id="modalShippingRow">
+          <span>🛵 Delivery Fee</span>
+          <span>₦700</span>
+        </div>
+        <div class="modal-order-total"><span>Total</span><span id="modalOrderTotal">₦0.00</span></div>
+      </div>
+
+      <div style="margin-bottom:1rem">
+        <label style="font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.7rem">How would you like to receive your order? *</label>
+        <div class="delivery-toggle">
+          <div class="delivery-opt selected" data-type="delivery" onclick="selectDelivery('delivery')">
+            <span class="dopt-icon">🛵</span>Delivery (+₦700)
+          </div>
+          <div class="delivery-opt" data-type="pickup" onclick="selectDelivery('pickup')">
+            <span class="dopt-icon">🍽️</span>Pickup / Dine-In
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ckName">Full Name *</label>
+          <input type="text" id="ckName" placeholder="Your full name" />
+          <div class="form-error" id="ckNameErr">Please enter your name.</div>
+        </div>
+        <div class="form-group">
+          <label for="ckPhone">Phone Number *</label>
+          <input type="tel" id="ckPhone" placeholder="+234 801 234 5678" />
+          <div class="form-error" id="ckPhoneErr">Please enter a valid phone number.</div>
+        </div>
+      </div>
+
+      <div class="address-group show" id="addressGroup">
+        <div class="form-group">
+          <label for="ckStreet">Street Address *</label>
+          <input type="text" id="ckStreet" placeholder="12 Adeola Odeku Street" />
+          <div class="form-error" id="ckStreetErr">Please enter your street address.</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ckCity">City *</label>
+            <input type="text" id="ckCity" placeholder="Lagos" />
+            <div class="form-error" id="ckCityErr">Please enter your city.</div>
+          </div>
+          <div class="form-group">
+            <label for="ckState">State</label>
+            <input type="text" id="ckState" placeholder="Lagos State" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ckLandmark">Landmark / Directions (optional)</label>
+          <input type="text" id="ckLandmark" placeholder="Near the blue gate, opposite Unity Bank…" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ckNotes">Special Instructions (optional)</label>
+        <textarea id="ckNotes" placeholder="Allergies, extra pepper, no onions, cutlery needed…"></textarea>
+      </div>
+
+      <button class="btn-continue" onclick="goToStep2()">Continue to Payment →</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="checkout-step" id="checkoutStep2">
+      <button class="btn-back" onclick="goToStep1()">← Back to Details</button>
+
+      <div class="modal-title">Choose Payment</div>
+      <p class="modal-sub">Select your preferred payment method to complete your order.</p>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding:0.8rem 1rem;background:var(--bg-3);border:1px solid var(--border);border-radius:2px">
+        <span style="font-size:0.75rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase">Order Total</span>
+        <span style="font-family:var(--font-disp);font-size:1.3rem;color:var(--gold)" id="step2Total">₦0.00</span>
+      </div>
+
+      <div class="payment-section-title">Select Payment Method</div>
+      <div class="payment-methods">
+        <label class="payment-method-card selected" id="pmBankCard" onclick="selectPaymentMethod('bank')">
+          <input type="radio" name="payMethod" value="bank" checked />
+          <div class="pm-check">✓</div>
+          <span class="pm-icon">🏦</span>
+          <div class="pm-name">Bank Transfer</div>
+          <div class="pm-desc">Pay securely via bank transfer before delivery</div>
+        </label>
+        <label class="payment-method-card" id="pmCodCard" onclick="selectPaymentMethod('cod')">
+          <input type="radio" name="payMethod" value="cod" />
+          <div class="pm-check">✓</div>
+          <span class="pm-icon">💵</span>
+          <div class="pm-name">Cash on Delivery</div>
+          <div class="pm-desc">Pay with cash when your order arrives</div>
+        </label>
+      </div>
+
+      <!-- BANK TRANSFER CARD -->
+      <div id="bankTransferDetails" class="show">
+        <div class="bank-card">
+          <div class="bank-card-header">
+            <div class="bank-card-logo">OPay</div>
+            <div class="bank-card-tag">Secure Transfer</div>
+          </div>
+          <div class="bank-card-chip"></div>
+          <div class="bank-acct-label">Account Number</div>
+          <div class="bank-acct-number" id="acctNumberDisplay">8123 4567 89</div>
+          <div class="bank-card-footer">
+            <div class="bank-field-group">
+              <span class="bank-field-label">Account Name</span>
+              <span class="bank-field-value">Kings Restaurant</span>
+            </div>
+            <div class="bank-field-group" style="text-align:right">
+              <span class="bank-field-label">Bank</span>
+              <span class="bank-field-value">OPay</span>
+            </div>
+          </div>
+          <div class="bank-secure-badge" style="margin-top:1rem">
+            <span>🔒</span> SSL Secured &nbsp;·&nbsp; <span>✦</span> Velour Verified
+          </div>
+        </div>
+        <button class="copy-acct-btn" id="copyAcctBtn" onclick="copyAccountNumber()">
+          <span>📋</span> Copy Account Number
+        </button>
+        <div class="bank-instruction">
+          <strong>⚡ Transfer Instructions</strong>
+          1. Transfer the exact order total to the account above.<br>
+          2. Use your name as the payment narration/description.<br>
+          3. Your order details will be sent directly to our WhatsApp.<br>
+          4. Attach your payment receipt on WhatsApp for easier payment confirmation.<br>
+          5. We confirm payment and dispatch your order promptly.
+        </div>
+      </div>
+
+      <!-- COD -->
+      <div id="codDetails">
+        <div class="cod-message">
+          <div class="cod-icon">🛵</div>
+          <div class="cod-title">Cash on Delivery</div>
+          <p class="cod-text">Pay with cash when your order arrives at your door.<br><br>
+            <strong>Your order will be confirmed on WhatsApp</strong> immediately after you click "Place Order". Our team will call you to confirm delivery time.
+          </p>
+        </div>
+      </div>
+
+      <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+        <span id="placeOrderLabel">I Have Paid — Send Order on WhatsApp</span>
+      </button>
+
+      <div class="security-strip">
+        <span>🔒</span> End-to-end secure &nbsp;·&nbsp; <span>✦</span> Orders confirmed on WhatsApp &nbsp;·&nbsp; <span>📞</span> Support: +234 802 755 8472
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESERVATION SUCCESS MODAL -->
+<div class="modal-overlay" id="resSuccessModal">
+  <div class="modal-box" style="max-width:480px;text-align:center">
+    <button class="modal-close" onclick="closeResSuccessModal()">✕</button>
+    <div class="success-panel show" style="padding:1.5rem 0">
+      <div class="success-icon">🍽️</div>
+      <div class="success-title">Reservation Received!</div>
+      <p class="success-msg">Thank you, <span class="success-name" id="resSuccessName"></span>! Your table reservation request has been received.<br><br>
+        A confirmation email has been sent to <strong id="resSuccessEmail" style="color:var(--gold)"></strong>.<br><br>
+        We look forward to welcoming you. See you soon!
+      </p>
+      <button class="btn-primary" style="margin:2rem auto 0;display:inline-flex" onclick="closeResSuccessModal()">Wonderful!</button>
+    </div>
+  </div>
+</div>
+
+<!-- OWNER PANEL MODAL -->
+<div class="owner-overlay" id="ownerOverlay">
+  <div class="owner-box">
+    <div class="owner-header">
+      <div class="owner-title">⚙ Owner Panel</div>
+      <button class="owner-close" onclick="closeOwnerPanel()">✕</button>
+    </div>
+
+    <div id="ownerLogin">
+      <div class="login-wrap">
+        <h3>Restaurant Owner Login</h3>
+        <p>Enter your owner password to access the management panel.</p>
+        <div class="form-group">
+          <label for="ownerPass">Password</label>
+          <input type="password" id="ownerPass" placeholder="Enter owner password" onkeydown="if(event.key==='Enter')ownerLogin()" />
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="ownerLogin()">Login →</button>
+        <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
+        <p style="font-size:0.72rem;color:var(--text-dim);margin-top:1.5rem;line-height:1.8">Default password: <strong style="color:var(--gold)">velour2024</strong><br>Change it in Settings after logging in.</p>
+      </div>
+    </div>
+
+    <div id="ownerContent" style="display:none">
+      <div class="owner-tabs">
+        <button class="owner-tab active" onclick="ownerShowTab('products')">🍽 Products</button>
+        <button class="owner-tab" onclick="ownerShowTab('jsonbin')">☁ Cloud Sync</button>
+        <button class="owner-tab" onclick="ownerShowTab('settings')">⚙ EmailJS</button>
+        <button class="owner-tab" onclick="ownerShowTab('password')">🔒 Password</button>
+        <button class="owner-tab" style="margin-left:auto;border-color:var(--red);color:var(--red)" onclick="ownerLogout()">Logout</button>
+      </div>
+
+      <div id="ownerTabProducts">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.8rem">
+          <div class="owner-form-title" style="margin-bottom:0">Manage Menu Items</div>
+          <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap">
+            <span id="syncStatus" class="sync-indicator"><span class="sync-dot"></span> Not synced</span>
+            <button class="owner-add-btn" onclick="ownerStartAdd()">+ Add New Item</button>
+          </div>
+        </div>
+        <div class="owner-product-list" id="ownerProductList"></div>
+        <div id="ownerProductForm" style="display:none;background:var(--bg-3);border:1px solid var(--border);padding:1.5rem;margin-top:1rem">
+          <div class="owner-form-title" id="ownerFormTitle">Add New Menu Item</div>
+          <input type="hidden" id="ownerEditId" value="" />
+          <div class="form-row">
+            <div class="form-group">
+              <label>Item Name *</label>
+              <input type="text" id="opName" placeholder="e.g. Egusi Soup" />
+            </div>
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="opCategory">
+                <option value="starters">Starters</option>
+                <option value="mains">Mains</option>
+                <option value="desserts">Desserts</option>
+                <option value="drinks">Drinks</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Price (₦) *</label>
+              <input type="number" id="opPrice" placeholder="e.g. 8500" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Badge (optional)</label>
+              <input type="text" id="opBadge" placeholder="e.g. Chef's Choice" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea id="opDesc" placeholder="Describe the dish…" style="min-height:70px"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Item Photo *</label>
+            <div class="img-upload-wrap">
+              <div class="img-upload-preview" id="imgUploadPreview" onclick="triggerImgUpload()">
+                <img id="imgPreviewEl" src="" alt="Preview" />
+                <div class="img-upload-placeholder" id="imgUploadPlaceholder">
+                  <div class="img-upload-icon">📷</div>
+                  <div class="img-upload-text">Click to upload photo</div>
+                  <div class="img-upload-sub">JPG, PNG, WEBP — Max 5MB</div>
+                </div>
+                <input type="file" id="opImgFile" accept="image/*" onchange="handleImgUpload(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;" />
+              </div>
+              <input type="hidden" id="opImg" />
+              <div style="font-size:0.7rem;color:var(--text-dim);margin-top:6px">Or paste a URL instead: <input type="text" id="opImgUrl" placeholder="https://images.unsplash.com/…" style="width:100%;margin-top:4px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.8rem;font-size:0.8rem;outline:none" oninput="syncImgUrl(this.value)" /></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.8rem;margin-top:0.5rem;flex-wrap:wrap">
+            <button class="owner-add-btn" onclick="ownerSaveProduct()">💾 Save Item</button>
+            <button onclick="ownerCancelForm()" style="padding:0.65rem 1.2rem;border:1px solid var(--border);color:var(--text-dim);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;transition:all 0.2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ FIX 2: JSONBin Cloud Sync Tab -->
+      <div id="ownerTabJsonbin" style="display:none">
+        <div class="config-section">
+          <h4>☁ Cloud Menu Sync (JSONBin.io)</h4>
+          <p>This fixes the problem where menu updates only appear on your device. Once configured, <strong style="color:var(--gold)">all visitors worldwide see your latest menu</strong> when you add, edit, or delete items.</p>
+
+          <div style="background:rgba(201,168,76,0.07);border:1px solid var(--border-md);border-radius:3px;padding:1rem 1.2rem;margin-bottom:1.4rem;font-size:0.78rem;line-height:1.9;color:var(--text-dim)">
+            <strong style="color:var(--gold);display:block;margin-bottom:0.4rem">📋 How to set up (free, 2 minutes):</strong>
+            1. Go to <a href="https://jsonbin.io" target="_blank" style="color:var(--gold);text-decoration:underline">jsonbin.io</a> → Sign up free<br>
+            2. Click <strong style="color:var(--cream)">+ Create Bin</strong> → paste <code style="background:var(--bg);padding:2px 5px;color:var(--cream-dim)">[]</code> as content → Save<br>
+            3. Copy the <strong style="color:var(--cream)">Bin ID</strong> from the URL (looks like <code style="background:var(--bg);padding:2px 5px;color:var(--cream-dim)">64abc123...</code>)<br>
+            4. Go to <strong style="color:var(--cream)">API Keys</strong> tab → copy your <strong style="color:var(--cream)">Master Key</strong> or create an Access Key<br>
+            5. Paste both below and click Save
+          </div>
+
+          <div class="form-group">
+            <label>JSONBin Bin ID</label>
+            <input type="text" id="cfBinId" placeholder="e.g. 64abc123def456789..." />
+          </div>
+          <div class="form-group">
+            <label>JSONBin API Key (Master or Access Key)</label>
+            <input type="password" id="cfBinKey" placeholder="$2b$10$..." />
+          </div>
+          <div style="display:flex;gap:0.8rem;flex-wrap:wrap;align-items:center;margin-top:1rem">
+            <button class="config-save-btn" style="margin-top:0" onclick="saveJsonBinConfig()">Save & Test Connection</button>
+            <button onclick="pushMenuToCloud()" style="padding:0.6rem 1.4rem;border:1px solid var(--gold);color:var(--gold);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.2s;margin-top:0" onmouseover="this.style.background='rgba(201,168,76,0.1)'" onmouseout="this.style.background='none'">↑ Push Current Menu to Cloud</button>
+          </div>
+          <div class="config-status" id="cfBinStatus"></div>
+        </div>
+
+        <div class="config-section" style="border-color:rgba(201,76,76,0.25)">
+          <h4 style="color:var(--red)">⚠ Security Note</h4>
+          <p>Your API key is stored in this browser's localStorage and is only used to save the menu. <strong style="color:var(--cream)">Do not share your API key with anyone.</strong> Visitors only read the menu — they cannot modify it.</p>
+        </div>
+      </div>
+
+      <div id="ownerTabSettings" style="display:none">
+        <div class="config-section">
+          <h4>EmailJS Configuration</h4>
+          <p>Set up your EmailJS credentials so reservation confirmations are sent by email. Go to <strong style="color:var(--gold)">emailjs.com</strong>, create a free account, add an Email Service and a Reservation template, then paste your credentials below.</p>
+          <p style="margin-top:0.5rem">Template variables: <code style="background:var(--bg);padding:2px 6px;font-size:0.72rem;color:var(--cream-dim)">{{to_name}} {{to_email}} {{res_date}} {{res_time}} {{guests}} {{phone}} {{notes}}</code></p>
+          <div class="form-group" style="margin-top:1.2rem"><label>Public Key</label><input type="text" id="cfPublicKey" placeholder="e.g. abc123XYZ…" /></div>
+          <div class="form-group"><label>Service ID</label><input type="text" id="cfServiceId" placeholder="e.g. service_xxxxxx" /></div>
+          <div class="form-group"><label>Reservation Template ID</label><input type="text" id="cfResTpl" placeholder="e.g. template_xxxxxx" /></div>
+          <div class="form-group"><label>Restaurant Email</label><input type="text" id="cfRestEmail" placeholder="hello@velourrestaurant.ng" /></div>
+          <button class="config-save-btn" onclick="saveEmailJSConfig()">Save & Apply Configuration</button>
+          <div class="config-status" id="cfStatus"></div>
+        </div>
+      </div>
+
+      <div id="ownerTabPassword" style="display:none">
+        <div style="max-width:400px">
+          <div class="owner-form-title">Change Owner Password</div>
+          <div class="form-group"><label>Current Password</label><input type="password" id="pwCurrent" placeholder="Current password" /></div>
+          <div class="form-group"><label>New Password</label><input type="password" id="pwNew" placeholder="New password (min 6 chars)" /></div>
+          <div class="form-group"><label>Confirm New Password</label><input type="password" id="pwConfirm" placeholder="Repeat new password" /></div>
+          <button class="owner-add-btn" onclick="changeOwnerPassword()">Update Password</button>
+          <div class="login-err" id="pwErr" style="margin-top:0.8rem;display:none"></div>
+          <div style="font-size:0.72rem;color:var(--green);margin-top:0.8rem;display:none" id="pwOk">✓ Password updated successfully.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<header id="navbar">
+  <a href="#hero" class="nav-brand">VELOUR</a>
+  <nav class="nav-links">
+    <a href="#hero">Home</a>
+    <a href="#menu">Menu</a>
+    <a href="#about">About</a>
+    <a href="#chefs">Chefs</a>
+    <a href="#reservations">Reservations</a>
+    <a href="#contact">Contact</a>
+    <a href="#reservations" class="nav-reserve">Book a Table</a>
+  </nav>
+  <!-- ✅ FIX 1: Cart button always visible, moved before toggle for mobile layout -->
+  <button class="nav-cart-btn" onclick="openCart()" aria-label="View cart">
+    🛒 <span class="cart-badge" id="cartBadge">0</span>
+  </button>
+  <button class="nav-toggle" id="navToggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Est. 2006 — Premium Nigerian Fine Dining</span>
+    <h1 class="hero-title">Where Every<br>Dish Tells<br>a <em>Story</em></h1>
+    <p class="hero-desc">A sanctuary of refined Nigerian flavors and intimate elegance. We craft each plate with passion, celebrating the rich culinary heritage of Nigeria with world-class artistry.</p>
+    <div class="hero-actions">
+      <a href="#reservations" class="btn-primary">Reserve a Table →</a>
+      <a href="#menu" class="btn-outline">Explore Menu</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="hero-scroll-line"></div><span>Scroll</span></div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="stat-num" data-target="18">0</div><div class="stat-label">Years of Excellence</div></div>
+    <div class="hero-stat"><div class="stat-num" data-target="3">0</div><div class="stat-label">Awards Won</div></div>
+    <div class="hero-stat"><div class="stat-num" data-target="48">0</div><div class="stat-label">Signature Dishes</div></div>
+  </div>
+</section>
+
+<div class="counters-band" id="counters">
+  <div class="counter-item reveal"><div class="counter-num" data-target="12000">0</div><div class="counter-lbl">Happy Guests</div></div>
+  <div class="counter-item reveal" style="transition-delay:0.1s"><div class="counter-num" data-target="85">0</div><div class="counter-lbl">Award-Winning Dishes</div></div>
+  <div class="counter-item reveal" style="transition-delay:0.2s"><div class="counter-num" data-target="24">0</div><div class="counter-lbl">Expert Chefs</div></div>
+  <div class="counter-item reveal" style="transition-delay:0.3s"><div class="counter-num" data-target="18">0</div><div class="counter-lbl">Years of Excellence</div></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="about-grid">
+    <div class="about-images reveal-left">
+      <img class="about-img about-img-main" src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=600&q=80" alt="Velour interior" loading="lazy"/>
+      <img class="about-img about-img-side" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" alt="Nigerian dish" loading="lazy"/>
+      <img class="about-img about-img-side" src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&q=80" alt="Chef at work" loading="lazy"/>
+      <div class="about-badge"><div class="num">18+</div><span class="lbl">Years of Craft</span></div>
+    </div>
+    <div class="about-text reveal-right">
+      <span class="section-tag">Our Story</span>
+      <h2 class="section-title">A Passion for<br>Nigerian <em>Cuisine</em></h2>
+      <div class="gold-rule"></div>
+      <p class="about-p">Founded in 2006, Velour was born from a singular vision — to celebrate Nigeria's extraordinary culinary heritage in an atmosphere of refined elegance. From the smoky richness of suya to the delicate layers of egusi, every dish is a tribute to our roots.</p>
+      <p class="about-p">We partner with local farmers, spice traders, and artisan producers across Nigeria to source only the finest, freshest ingredients — honouring tradition while embracing modern technique.</p>
+      <div class="chef-mini">
+        <img src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=200&q=80" alt="Head Chef Emeka Okafor" loading="lazy"/>
+        <div>
+          <div class="chef-mini-name">Emeka Okafor</div>
+          <div class="chef-mini-role">Executive Chef & Founder</div>
+        </div>
+      </div>
+      <div style="margin-top:2.5rem"><a href="#chefs" class="btn-outline">Meet Our Chefs</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu" class="section">
+  <div class="menu-header reveal">
+    <span class="section-tag">Culinary Artistry</span>
+    <h2 class="section-title">Our <em>Signature</em> Nigerian Menu</h2>
+    <p class="section-subtitle">Each dish is a canvas — handcrafted from Nigeria's finest seasonal ingredients. Add to your order and send directly via WhatsApp.</p>
+  </div>
+  <div class="menu-tabs reveal" id="menuTabs">
+    <button class="menu-tab active" data-filter="all">All</button>
+    <button class="menu-tab" data-filter="starters">Starters</button>
+    <button class="menu-tab" data-filter="mains">Mains</button>
+    <button class="menu-tab" data-filter="desserts">Desserts</button>
+    <button class="menu-tab" data-filter="drinks">Drinks</button>
+  </div>
+  <div class="menu-search-wrap reveal">
+    <div class="menu-search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="menuSearchInput" placeholder="Search dishes by name…" oninput="handleMenuSearch(this.value)" autocomplete="off" />
+      <button class="menu-search-clear" id="menuSearchClear" onclick="clearMenuSearch()" title="Clear search">✕</button>
+    </div>
+  </div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<!-- CHEFS -->
+<section id="chefs" class="section">
+  <div class="chefs-header reveal">
+    <span class="section-tag">The Masters</span>
+    <h2 class="section-title">Meet Our <em>Culinary Artists</em></h2>
+    <p class="section-subtitle" style="margin:1rem auto 0;text-align:center">Guided by passion and decades of experience, our chefs elevate Nigerian cuisine to extraordinary heights.</p>
+  </div>
+  <div class="chefs-grid" id="chefsGrid"></div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="section">
+  <div class="gallery-header reveal">
+    <span class="section-tag">Visual Journey</span>
+    <h2 class="section-title">A Feast for the <em>Eyes</em></h2>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80" alt="Restaurant ambience" loading="lazy"/><div class="gallery-overlay"><span>✦</span></div></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80" alt="Fine dining" loading="lazy"/><div class="gallery-overlay"><span>✦</span></div></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600&q=80" alt="Artisan dish" loading="lazy"/><div class="gallery-overlay"><span>✦</span></div></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=900&q=80" alt="Gourmet plate" loading="lazy"/><div class="gallery-overlay"><span>✦</span></div></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=75" alt="Dessert" loading="lazy"/><div class="gallery-overlay"><span>✦</span></div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="section">
+  <div class="testimonials-header reveal">
+    <span class="section-tag">Voices of Delight</span>
+    <h2 class="section-title">What Our <em>Guests</em> Say</h2>
+  </div>
+  <div class="slider-wrap reveal"><div class="slider-track" id="sliderTrack"></div></div>
+  <div class="slider-dots" id="sliderDots"></div>
+  <div class="slider-arrows">
+    <button class="slider-btn" onclick="moveSlider(-1)">←</button>
+    <button class="slider-btn" onclick="moveSlider(1)">→</button>
+  </div>
+</section>
+
+<!-- RESERVATIONS -->
+<section id="reservations" class="section">
+  <div class="res-bg"></div>
+  <div class="res-grid">
+    <div class="reveal-left">
+      <span class="section-tag">Book a Table</span>
+      <h2 class="res-info-title">Reserve Your<br><em>Evening</em> With Us</h2>
+      <div class="gold-rule"></div>
+      <p class="res-info-p">Whether it's an intimate dinner for two, a family celebration, or a corporate gathering — we'll craft an evening perfectly tailored to your occasion.</p>
+      <div class="hours-list">
+        <h3 style="font-family:var(--font-disp);font-size:1.1rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:0.5rem">Opening Hours</h3>
+        <div class="hours-item"><span class="hours-day">Monday</span><span class="hours-time">7:00 AM – 10:00 PM</span></div>
+        <div class="hours-item"><span class="hours-day">Tuesday</span><span class="hours-time">7:00 AM – 10:00 PM</span></div>
+        <div class="hours-item"><span class="hours-day">Wednesday</span><span class="hours-time">7:00 AM – 10:00 PM</span></div>
+        <div class="hours-item"><span class="hours-day">Thursday</span><span class="hours-time">7:00 AM – 10:00 PM</span></div>
+        <div class="hours-item"><span class="hours-day">Friday</span><span class="hours-time">7:00 AM – 10:00 PM</span></div>
+        <div class="hours-item"><span class="hours-day">Saturday</span><span class="hours-time">7:00 AM – 10:00 PM</span></div>
+        <div class="hours-item"><span class="hours-day">Sunday</span><span class="hours-time hours-closed">Closed</span></div>
+      </div>
+    </div>
+    <div class="res-form-wrap reveal-right">
+      <div class="res-form-title">Make a Reservation</div>
+      <div class="emailjs-notice" id="emailjsNotice" style="display:none">
+        <strong>⚠ EmailJS Not Configured</strong>
+        Reservations will be sent via WhatsApp until you set up EmailJS. Go to the <strong style="color:var(--gold)">Owner Panel → EmailJS Settings</strong> to enter your credentials.
+      </div>
+      <form id="resForm" novalidate>
+        <div class="form-row">
+          <div class="form-group"><label for="resName">Full Name *</label><input type="text" id="resName" placeholder="Your full name"/><div class="form-error" id="resNameErr">Please enter your name.</div></div>
+          <div class="form-group"><label for="resEmail">Email *</label><input type="email" id="resEmail" placeholder="you@example.com"/><div class="form-error" id="resEmailErr">Please enter a valid email.</div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="resPhone">Phone *</label><input type="tel" id="resPhone" placeholder="+234 801 234 5678"/><div class="form-error" id="resPhoneErr">Please enter a valid phone.</div></div>
+          <div class="form-group"><label for="resGuests">Guests *</label>
+            <select id="resGuests"><option value="">Select guests</option><option>1 Guest</option><option>2 Guests</option><option>3 Guests</option><option>4 Guests</option><option>5 Guests</option><option>6 Guests</option><option>7+ Guests</option></select>
+            <div class="form-error" id="resGuestsErr">Please select number of guests.</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="resDate">Date *</label><input type="date" id="resDate"/><div class="form-error" id="resDateErr">Please select a valid date.</div></div>
+          <div class="form-group"><label for="resTime">Time *</label>
+            <select id="resTime"><option value="">Select time</option><option>7:00 AM</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option><option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option><option>8:00 PM</option><option>9:00 PM</option></select>
+            <div class="form-error" id="resTimeErr">Please select a time.</div>
+          </div>
+        </div>
+        <div class="form-group"><label for="resNote">Special Requests</label><textarea id="resNote" placeholder="Dietary requirements, special occasions, accessibility needs…"></textarea></div>
+        <button type="submit" class="btn-submit" id="resSubmitBtn" style="justify-content:center">
+          <span class="spinner"></span>
+          <span class="btn-label" id="resSubmitLabel">Confirm Reservation →</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section">
+  <div class="faq-header reveal">
+    <span class="section-tag">Questions & Answers</span>
+    <h2 class="section-title">Frequently Asked <em>Questions</em></h2>
+  </div>
+  <div class="faq-grid" id="faqGrid"></div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div class="contact-grid">
+    <div class="reveal-left">
+      <span class="section-tag">Get in Touch</span>
+      <h2 class="contact-info-title">We'd Love to<br>Hear from <em>You</em></h2>
+      <div class="gold-rule"></div>
+      <div class="contact-detail"><div class="contact-icon">📍</div><div><span class="contact-detail-lbl">Address</span><span class="contact-detail-val">14 Ozumba Mbadiwe Avenue, Victoria Island, Lagos, Nigeria</span></div></div>
+      <div class="contact-detail"><div class="contact-icon">📞</div><div><span class="contact-detail-lbl">Reservations</span><span class="contact-detail-val">+234 (01) 555-0182</span></div></div>
+      <div class="contact-detail"><div class="contact-icon">✉</div><div><span class="contact-detail-lbl">Email</span><span class="contact-detail-val">hello@velourrestaurant.ng</span></div></div>
+      <div class="map-placeholder"><span>📍 Victoria Island, Lagos</span></div>
+    </div>
+    <div class="contact-form-wrap reveal-right">
+      <div class="res-form-title">Send a Message</div>
+      <div id="contactSuccess" style="display:none;background:rgba(201,168,76,0.08);border:1px solid var(--gold);padding:1.2rem;font-size:0.85rem;color:var(--gold);line-height:1.8;margin-bottom:1rem">✓ Message sent! We'll get back to you within 24 hours.</div>
+      <form id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-group"><label for="ctName">Full Name *</label><input type="text" id="ctName" placeholder="Your name"/><div class="form-error" id="ctNameErr">Please enter your name.</div></div>
+          <div class="form-group"><label for="ctEmail">Email *</label><input type="email" id="ctEmail" placeholder="you@example.com"/><div class="form-error" id="ctEmailErr">Please enter a valid email.</div></div>
+        </div>
+        <div class="form-group"><label for="ctSubject">Subject</label><input type="text" id="ctSubject" placeholder="How can we help?"/></div>
+        <div class="form-group"><label for="ctMsg">Message *</label><textarea id="ctMsg" placeholder="Tell us more…" style="min-height:140px"></textarea><div class="form-error" id="ctMsgErr">Please enter a message.</div></div>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="reveal">
+    <span class="section-tag" style="display:block;text-align:center">Stay in the Loop</span>
+    <h2 class="newsletter-title">Taste the <em>Latest</em> News</h2>
+    <p class="newsletter-sub">Subscribe for exclusive menus, seasonal events, and curated Nigerian culinary stories.</p>
+    <form class="newsletter-form" id="newsletterForm" novalidate>
+      <input type="email" id="nlEmail" placeholder="Enter your email address"/>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <span class="footer-brand">VELOUR</span>
+      <p class="footer-tagline">A destination for the discerning palate. Celebrating the finest Nigerian cuisine in an atmosphere of timeless elegance.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-link">📷</a><a href="#" class="social-link">f</a>
+        <a href="#" class="social-link">𝕏</a><a href="#" class="social-link">in</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Explore</div>
+      <div class="footer-links">
+        <a href="#hero">Home</a><a href="#menu">Menu</a>
+        <a href="#about">Our Story</a><a href="#chefs">The Chefs</a><a href="#gallery">Gallery</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Visit</div>
+      <div class="footer-links">
+        <a href="#reservations">Reservations</a><a href="#contact">Contact</a>
+        <a href="#faq">FAQ</a><a href="#">Private Events</a><a href="#">Gift Cards</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Opening Hours</div>
+      <div style="font-size:0.8rem;color:var(--text-dim);line-height:2.2">
+        <div><span style="color:var(--cream-dim);display:inline-block;min-width:100px">Mon–Sat</span>7:00 AM – 10:00 PM</div>
+        <div><span style="color:var(--red);display:inline-block;min-width:100px">Sunday</span><span style="color:var(--red)">Closed</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Velour Restaurant. All rights reserved. Designed by Kyrian.</span>
+    <span><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a></span>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   CONSTANTS
+================================================================ */
+const WHATSAPP_NUMBER = "2348027558472";
+const BANK_ACCT_RAW  = "8123456789";
+const DELIVERY_FEE   = 700;
+
+/* ================================================================
+   EMAILJS CONFIG
+================================================================ */
+function getEmailJSConfig() {
+  return {
+    publicKey:  localStorage.getItem('vl_ejs_pk')   || '',
+    serviceId:  localStorage.getItem('vl_ejs_svc')  || '',
+    resTpl:     localStorage.getItem('vl_ejs_res')  || '',
+    restEmail:  localStorage.getItem('vl_ejs_email')|| 'hello@velourrestaurant.ng',
+  };
+}
+function isEmailJSConfigured() {
+  const c = getEmailJSConfig();
+  return c.publicKey && c.serviceId && c.resTpl;
+}
+function initEmailJS() {
+  const c = getEmailJSConfig();
+  if (c.publicKey) { try { emailjs.init({ publicKey: c.publicKey }); } catch(e) {} }
+}
+initEmailJS();
+
+/* ================================================================
+   ✅ FIX 2: JSONBIN CLOUD STORAGE
+   All visitors load menu from JSONBin. Admin edits push to JSONBin.
+   Falls back to default menu items if not configured.
+================================================================ */
+function getJsonBinConfig() {
+  return {
+    binId:  localStorage.getItem('vl_bin_id')  || '',
+    apiKey: localStorage.getItem('vl_bin_key') || '',
+  };
+}
+function isJsonBinConfigured() {
+  const c = getJsonBinConfig();
+  return c.binId && c.apiKey;
+}
+
+function setSyncStatus(state, msg) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  el.className = 'sync-indicator ' + state;
+  const dot = el.querySelector('.sync-dot');
+  dot.className = 'sync-dot' + (state === 'syncing' ? ' pulse' : '');
+  el.innerHTML = `<span class="sync-dot${state === 'syncing' ? ' pulse' : ''}"></span> ${msg}`;
+}
+
+async function fetchMenuFromCloud() {
+  if (!isJsonBinConfigured()) return null;
+  const { binId, apiKey } = getJsonBinConfig();
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': apiKey }
+    });
+    if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+    const data = await res.json();
+    const items = data.record;
+    if (Array.isArray(items) && items.length > 0) {
+      localStorage.setItem('vl_menu', JSON.stringify(items));
+      return items;
+    }
+    return null;
+  } catch(e) {
+    console.error('JSONBin fetch error:', e);
+    return null;
+  }
+}
+
+async function pushMenuToCloud(items) {
+  if (!isJsonBinConfigured()) {
+    showToast('⚠ Cloud sync not configured. Go to Owner Panel → Cloud Sync.');
+    return false;
+  }
+  const { binId, apiKey } = getJsonBinConfig();
+  const payload = items || loadMenuItemsLocal();
+  setSyncStatus('syncing', 'Saving to cloud…');
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': apiKey,
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Push failed: ' + res.status);
+    setSyncStatus('synced', '✓ Synced to cloud');
+    showToast('✓ Menu saved to cloud — all visitors will see the update!');
+    return true;
+  } catch(e) {
+    setSyncStatus('error', '✗ Sync failed');
+    showToast('⚠ Cloud sync failed. Check your JSONBin credentials.');
+    console.error('JSONBin push error:', e);
+    return false;
+  }
+}
+
+async function saveJsonBinConfig() {
+  const binId  = document.getElementById('cfBinId').value.trim();
+  const apiKey = document.getElementById('cfBinKey').value.trim();
+  const status = document.getElementById('cfBinStatus');
+
+  if (!binId || !apiKey) {
+    status.textContent = '⚠ Please enter both Bin ID and API Key.';
+    status.className = 'config-status err';
+    return;
+  }
+
+  status.textContent = 'Testing connection…';
+  status.className = 'config-status ok';
+
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': apiKey }
+    });
+    if (!res.ok) throw new Error('Status ' + res.status);
+
+    localStorage.setItem('vl_bin_id', binId);
+    localStorage.setItem('vl_bin_key', apiKey);
+
+    status.textContent = '✓ Connected! Now push your current menu to the cloud.';
+    status.className = 'config-status ok';
+    showToast('✓ JSONBin connected successfully!');
+    setSyncStatus('synced', '✓ Connected');
+  } catch(e) {
+    status.textContent = '✗ Connection failed. Double-check your Bin ID and API Key.';
+    status.className = 'config-status err';
+  }
+}
+
+/* ================================================================
+   MENU DATA — local + cloud
+================================================================ */
+const defaultMenuItems = [
+  { id:1,  category:'starters',  name:'Peppered Asun',            desc:'Smoky grilled goat meat tossed in a fiery blend of scotch bonnet, tatashe and onions — a classic Nigerian street-food icon, elevated.',   price:4500, badge:"Chef's Choice", img:'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=75' },
+  { id:2,  category:'starters',  name:'Suya Skewers',             desc:'Tender strips of Fulani-spiced beef, marinated in yaji spice blend, char-grilled and served with sliced onions and tomatoes.',             price:3800, badge:'Signature',     img:'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=600&q=75' },
+  { id:3,  category:'starters',  name:'Akara & Ogi',              desc:'Fluffy black-eyed pea fritters, lightly spiced with crayfish and pepper, served alongside silky fermented corn porridge.',                 price:2500, badge:null,            img:'https://images.unsplash.com/photo-1585325701956-60dd9c8553bc?w=600&q=75' },
+  { id:4,  category:'mains',     name:'Ofe Onugbu',               desc:'Rich Igbo bitter leaf soup with assorted meats, stockfish, crayfish, and cocoyam, served with pounded yam. A taste of the East.',           price:9500, badge:'Premium',       img:'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=75' },
+  { id:5,  category:'mains',     name:'Egusi Soup & Eba',         desc:'Velvety melon seed soup with assorted smoked fish, goat meat, and iru, served with freshly made golden eba from premium cassava flour.',    price:8200, badge:'Seasonal',      img:'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=600&q=75' },
+  { id:6,  category:'mains',     name:'Banga Soup & Starch',      desc:'Delta-style palm nut soup, slow-cooked with fresh catfish, beletete leaves, and aromatic spices. Served with starch. Pure Delta royalty.',  price:9000, badge:null,            img:'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&q=75' },
+  { id:7,  category:'mains',     name:'Jollof Rice & Chicken',    desc:'Perfectly smoked party jollof rice cooked in a blend of tomatoes and spices, served with crispy grilled chicken and fried plantains.',      price:7500, badge:'Fan Favourite', img:'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=75' },
+  { id:8,  category:'mains',     name:'Nkwobi',                   desc:'Tender cow foot in a rich, spiced palm oil sauce seasoned with utazi leaves and ofor — an Igbo delicacy for the discerning palate.',        price:6800, badge:'Signature',     img:'https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&q=75' },
+  { id:9,  category:'desserts',  name:'Puff Puff Royale',         desc:"Velour's signature deep-fried dough balls — airy, golden, drizzled with dark chocolate and dusted with powdered sugar. Irresistible.",    price:2800, badge:'Signature',     img:'https://images.unsplash.com/photo-1559181567-c3190bded2cf?w=600&q=75' },
+  { id:10, category:'desserts',  name:'Chin Chin Parfait',        desc:'Layers of crunchy house-made chin chin, whipped coconut cream, and mango coulis — a nostalgic Nigerian sweet, reimagined beautifully.',      price:2500, badge:null,            img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=75' },
+  { id:11, category:'drinks',    name:'Zobo Signature',           desc:'House-crafted hibiscus drink steeped with ginger, cloves, and citrus, lightly sweetened and served over hand-chipped ice.',                 price:1800, badge:'Signature',     img:'https://images.unsplash.com/photo-1498804103079-a6351b050096?w=600&q=75' },
+  { id:12, category:'drinks',    name:'Kunu Aya (Tigernut Milk)', desc:'Creamy, chilled tigernut milk blended with dates and coconut — a northern Nigerian classic that is naturally sweet and nourishing.',         price:2000, badge:'Healthy',       img:'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&q=75' },
+];
+
+function loadMenuItemsLocal() {
+  const saved = localStorage.getItem('vl_menu');
+  return saved ? JSON.parse(saved) : defaultMenuItems;
+}
+
+function saveMenuItemsLocal(items) {
+  localStorage.setItem('vl_menu', JSON.stringify(items));
+}
+
+// Global menu items array — populated on page load
+let menuItems = loadMenuItemsLocal();
+
+// On page load: try to fetch fresh menu from cloud
+async function initMenu() {
+  showMenuLoading();
+  if (isJsonBinConfigured()) {
+    const cloudItems = await fetchMenuFromCloud();
+    if (cloudItems) {
+      menuItems = cloudItems;
+    } else {
+      menuItems = loadMenuItemsLocal();
+    }
+  } else {
+    menuItems = loadMenuItemsLocal();
+  }
+  renderMenu('all');
+}
+
+function showMenuLoading() {
+  document.getElementById('menuGrid').innerHTML = `
+    <div class="menu-loading">
+      <div class="menu-loading-spinner"></div>
+      Loading menu…
+    </div>`;
+}
+
+/* ================================================================
+   CHEFS, TESTIMONIALS, FAQS
+================================================================ */
+const chefs = [
+  { name:'Adaeze Nwosu',  role:'Executive Chef & Founder',  bio:'Born in Enugu and trained across Lagos and London, Emeka redefines Nigerian cuisine with bold, soulful flavours and meticulous presentation.', img:'images/chef 6.jpg' },
+  { name:'Frank Stanley',  role:'Head Pastry Chef',          bio:'Adaeze grew up making akara and puff puff in Aba. Today she transforms classic Nigerian sweets into stunning modern dessert experiences.',        img:'images/chef 8.jpg' },
+  { name:'Okoro Cynthia', role:'Sous Chef — Soups & Stews', bio:"From Kano with a decade of mastery in Northern and Yoruba cuisine, Ibrahim's suya and miyan kuka are legendary among Lagos food circles.",      img:'images/chef 1.jpg' },
+  { name:'Ugwu Kyrian',  role:'Head of Drinks & Bar',      bio:'Chidinma blends traditional Nigerian beverages — zobo, kunu, palmwine — with contemporary mixology to create drinks unlike anything else.',       img:'images/chef 7.jpg' },
+];
+
+const testimonials = [
+  { quote:"Velour is the finest Nigerian dining experience I've had anywhere in the world. The Ofe Onugbu transported me straight to my grandmother's kitchen — but elevated to something truly extraordinary.", stars:'★★★★★', author:'Chukwuemeka A.', role:'Lagos, Food Blogger' },
+  { quote:"We celebrated our anniversary at Velour and were blown away. The Banga Soup was divine, the service was impeccable, and the atmosphere is unlike anywhere else in Nigeria. We will absolutely return.", stars:'★★★★★', author:'Ngozi & Seun O.', role:'Victoria Island Guests' },
+  { quote:"As someone who has dined at restaurants across Africa and Europe, I can say Velour holds its own with complete confidence. Nigerian cuisine finally has the world-class home it deserves.", stars:'★★★★★', author:'Dr. Adebayo M.', role:'Abuja, Culinary Enthusiast' },
+  { quote:"The Suya Skewers are the best I've tasted outside Abuja — and the Jollof Rice is worth every naira. This is what Nigerian restaurants should aspire to be. Simply outstanding.", stars:'★★★★★', author:'Amaka T.', role:'Port Harcourt Guest' },
+];
+
+const faqs = [
+  { q:'Do you require a reservation?',             a:'Reservations are strongly recommended, especially on weekends. Walk-ins are welcome based on availability, but we cannot guarantee seating without a prior booking.' },
+  { q:'What is your dress code?',                  a:'We maintain a smart-casual to formal dress code. We kindly ask guests to avoid sportswear, flip-flops, or overly casual attire. Traditional Nigerian attire is warmly welcome and celebrated!' },
+  { q:'Can you accommodate dietary restrictions?', a:'Absolutely. Our kitchen is well-versed in vegetarian, vegan, and gluten-free preparations. Please mention any allergies or dietary requirements when booking.' },
+  { q:'Do you offer private dining?',              a:'Yes. Our private dining room accommodates up to 24 guests for exclusive events — birthdays, corporate dinners, traditional ceremonies. Contact our events team for bespoke packages.' },
+  { q:'Is there a tasting menu?',                  a:"Our 7-course Chef's Tasting Menu changes seasonally and showcases the breadth of Nigerian regional cuisine. Available Monday through Saturday evenings." },
+  { q:'What is your cancellation policy?',         a:'We kindly ask for at least 24 hours notice for cancellations. Groups of 6 or more require 48 hours notice. Late cancellations may incur a fee.' },
+];
+
+/* ================================================================
+   CART
+================================================================ */
+let cart = JSON.parse(localStorage.getItem('velour_cart') || '[]');
+let deliveryType  = 'delivery';
+let paymentMethod = 'bank';
+
+function saveCart() { localStorage.setItem('velour_cart', JSON.stringify(cart)); }
+
+function addToCart(id) {
+  const item = menuItems.find(i => i.id === id);
+  if (!item) return;
+  const existing = cart.find(i => i.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ id:item.id, name:item.name, price:item.price, img:item.img, qty:1 });
+  saveCart(); updateCartUI();
+  showToast(`✓ ${item.name} added to order`);
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  saveCart(); updateCartUI(); renderCartItems();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) { removeFromCart(id); return; }
+  saveCart(); updateCartUI(); renderCartItems();
+}
+
+function getSubtotal() { return cart.reduce((s,i) => s + i.price * i.qty, 0); }
+function getDeliveryFee() { return deliveryType === 'delivery' ? DELIVERY_FEE : 0; }
+function getTotal() { return getSubtotal() + getDeliveryFee(); }
+function fmt(n) { return '₦' + n.toLocaleString('en-NG'); }
+
+function updateCartUI() {
+  const count = cart.reduce((s,i) => s + i.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = count;
+  badge.classList.toggle('show', count > 0);
+}
+
+function renderCartItems() {
+  const el     = document.getElementById('cartItems');
+  const footer = document.getElementById('cartFooter');
+  if (!cart.length) {
+    el.innerHTML = '<div class="cart-empty">🍽️ Your order is empty.<br>Browse the menu and add your favourite dishes.</div>';
+    footer.style.display = 'none'; return;
+  }
+  footer.style.display = 'block';
+  el.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <img class="cart-item-img" src="${item.img}" alt="${item.name}" />
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${fmt(item.price * item.qty)}</div>
+      </div>
+      <div class="cart-item-qty">
+        <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+      </div>
+      <button class="cart-remove" onclick="removeFromCart(${item.id})" aria-label="Remove">✕</button>
+    </div>
+  `).join('');
+  const subtotal = getSubtotal();
+  document.getElementById('cartSubtotal').textContent = fmt(subtotal);
+  const feeRow = document.getElementById('cartDeliveryFeeRow');
+  feeRow.style.display = deliveryType === 'delivery' ? 'flex' : 'none';
+  document.getElementById('cartTotal').textContent = fmt(subtotal + getDeliveryFee());
+}
+
+function openCart() {
+  renderCartItems();
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ================================================================
+   CHECKOUT — STEP NAVIGATION
+================================================================ */
+function openCheckout() {
+  if (!cart.length) { showToast('Your cart is empty!'); return; }
+  closeCart();
+  populateOrderSummary();
+  goToStep1(true);
+  selectDelivery('delivery');
+  selectPaymentMethod('bank');
+  document.getElementById('checkoutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function populateOrderSummary() {
+  const items = document.getElementById('modalOrderItems');
+  items.innerHTML = cart.map(i =>
+    `<div class="modal-order-item"><span>${i.qty}× ${i.name}</span><span>${fmt(i.price*i.qty)}</span></div>`
+  ).join('');
+  updateSummaryTotals();
+}
+
+function updateSummaryTotals() {
+  const fee = getDeliveryFee();
+  const shippingRow = document.getElementById('modalShippingRow');
+  if (shippingRow) shippingRow.style.display = fee > 0 ? 'flex' : 'none';
+  document.getElementById('modalOrderTotal').textContent = fmt(getTotal());
+  document.getElementById('step2Total').textContent      = fmt(getTotal());
+}
+
+function goToStep1(initial) {
+  document.getElementById('checkoutStep1').classList.add('active');
+  document.getElementById('checkoutStep2').classList.remove('active');
+  document.getElementById('stepDot1').classList.add('active');
+  document.getElementById('stepDot1').classList.remove('done');
+  document.getElementById('stepLabel1').classList.add('active');
+  document.getElementById('stepDot2').classList.remove('active','done');
+  document.getElementById('stepLabel2').classList.remove('active');
+  document.getElementById('stepLine1').classList.remove('done');
+  if (!initial) clearErrors();
+}
+
+function goToStep2() {
+  let ok = true;
+  const name  = v('ckName');
+  const phone = v('ckPhone');
+  const street = v('ckStreet');
+  const city   = v('ckCity');
+
+  showErr('ckNameErr',  !name);            if (!name)           ok = false;
+  showErr('ckPhoneErr', !isPhone(phone));  if (!isPhone(phone)) ok = false;
+
+  if (deliveryType === 'delivery') {
+    showErr('ckStreetErr', !street);       if (!street)         ok = false;
+    showErr('ckCityErr',   !city);         if (!city)           ok = false;
+  }
+
+  if (!ok) return;
+
+  document.getElementById('checkoutStep1').classList.remove('active');
+  document.getElementById('checkoutStep2').classList.add('active');
+  document.getElementById('stepDot1').classList.remove('active');
+  document.getElementById('stepDot1').classList.add('done');
+  document.getElementById('stepDot1').textContent = '✓';
+  document.getElementById('stepLabel1').classList.remove('active');
+  document.getElementById('stepLine1').classList.add('done');
+  document.getElementById('stepDot2').classList.add('active');
+  document.getElementById('stepLabel2').classList.add('active');
+  document.getElementById('step2Total').textContent = fmt(getTotal());
+  document.querySelector('#checkoutModal .modal-box').scrollTop = 0;
+}
+
+function closeCheckout() {
+  document.getElementById('checkoutModal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('stepDot1').textContent = '1';
+}
+
+/* ================================================================
+   DELIVERY / PAYMENT METHOD SELECTION
+================================================================ */
+function selectDelivery(type) {
+  deliveryType = type;
+  document.querySelectorAll('.delivery-opt').forEach(opt =>
+    opt.classList.toggle('selected', opt.dataset.type === type)
+  );
+  document.getElementById('addressGroup').classList.toggle('show', type === 'delivery');
+  const feeRow = document.getElementById('cartDeliveryFeeRow');
+  if (feeRow) feeRow.style.display = type === 'delivery' ? 'flex' : 'none';
+  updateSummaryTotals();
+}
+
+function selectPaymentMethod(method) {
+  paymentMethod = method;
+  document.getElementById('pmBankCard').classList.toggle('selected', method === 'bank');
+  document.getElementById('pmCodCard').classList.toggle('selected', method === 'cod');
+  document.getElementById('bankTransferDetails').classList.toggle('show', method === 'bank');
+  document.getElementById('codDetails').classList.toggle('show', method === 'cod');
+  const label = method === 'bank'
+    ? 'I Have Paid — Send Order on WhatsApp'
+    : 'Place Order on WhatsApp';
+  document.getElementById('placeOrderLabel').textContent = label;
+  const copyBtn = document.getElementById('copyAcctBtn');
+  copyBtn.classList.remove('copied');
+  copyBtn.innerHTML = '<span>📋</span> Copy Account Number';
+}
+
+/* ================================================================
+   COPY ACCOUNT NUMBER
+================================================================ */
+function copyAccountNumber() {
+  navigator.clipboard.writeText(BANK_ACCT_RAW).then(() => {
+    const btn = document.getElementById('copyAcctBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✓</span> Copied to Clipboard!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<span>📋</span> Copy Account Number'; }, 3000);
+  }).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = BANK_ACCT_RAW; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+    showToast('✓ Account number copied!');
+  });
+}
+
+/* ================================================================
+   PLACE ORDER
+================================================================ */
+function placeOrder() {
+  const name     = v('ckName');
+  const phone    = v('ckPhone');
+  const street   = v('ckStreet');
+  const city     = v('ckCity');
+  const state    = v('ckState');
+  const landmark = v('ckLandmark');
+  const notes    = v('ckNotes');
+
+  const subtotal = getSubtotal();
+  const fee      = getDeliveryFee();
+  const total    = getTotal();
+
+  const orderLines = cart.map(i => `  • ${i.qty}x ${i.name} — ${fmt(i.price*i.qty)}`).join('\n');
+  const dateStr    = new Date().toLocaleString('en-NG', { weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+
+  let deliveryLine = '';
+  if (deliveryType === 'delivery') {
+    const addr = [street, city, state].filter(Boolean).join(', ');
+    deliveryLine = `📍 *Delivery Address:*\n  ${addr}${landmark ? '\n  Landmark: '+landmark : ''}`;
+  } else {
+    deliveryLine = `📍 *Order Type:* Pickup / Dine-In at Restaurant`;
+  }
+
+  let paymentLine = '';
+  if (paymentMethod === 'bank') {
+    paymentLine = `💳 *Payment Method:* Bank Transfer\n  ▸ Bank: OPay\n  ▸ Account: ${BANK_ACCT_RAW}\n  ▸ Name: Kings Restaurant\n  ▸ Amount Transferred: ${fmt(total)}`;
+  } else {
+    paymentLine = `💵 *Payment Method:* Cash on Delivery`;
+  }
+
+  let priceBreakdown = `\n🧾 *Price Breakdown:*\n  Subtotal: ${fmt(subtotal)}`;
+  if (fee > 0) priceBreakdown += `\n  Delivery Fee: ${fmt(fee)}`;
+  priceBreakdown += `\n  *TOTAL: ${fmt(total)}*`;
+
+  const msg = [
+    `🍽️ *NEW ORDER — VELOUR RESTAURANT*`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `👤 *Name:* ${name}`,
+    `📞 *Phone:* ${phone}`,
+    `📅 *Date:* ${dateStr}`,
+    `🚚 *Type:* ${deliveryType === 'delivery' ? 'Delivery' : 'Pickup / Dine-In'}`,
+    deliveryLine,
+    ``,
+    `🍴 *ORDER ITEMS:*`,
+    orderLines,
+    priceBreakdown,
+    paymentLine,
+    notes ? `\n📝 *Special Instructions:*\n  ${notes}` : ``,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    paymentMethod === 'bank'
+      ? `✅ Customer confirms payment has been made. Please verify and dispatch.`
+      : `🛵 Please confirm this order and provide estimated delivery time. Payment collected on delivery.`
+  ].filter(l => l !== undefined).join('\n');
+
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  cart = []; saveCart(); updateCartUI();
+  closeCheckout();
+
+  const successMsg = paymentMethod === 'bank'
+    ? '✓ Order sent to WhatsApp! Our team will verify your payment.'
+    : '✓ Order placed on WhatsApp! We\'ll confirm your delivery time shortly.';
+  showToast(successMsg);
+}
+
+/* ================================================================
+   MENU SEARCH
+================================================================ */
+let currentMenuFilter = 'all';
+let currentSearchQuery = '';
+
+function handleMenuSearch(query) {
+  currentSearchQuery = query.trim().toLowerCase();
+  const clearBtn = document.getElementById('menuSearchClear');
+  clearBtn.classList.toggle('show', currentSearchQuery.length > 0);
+  renderMenu(currentMenuFilter);
+}
+
+function clearMenuSearch() {
+  document.getElementById('menuSearchInput').value = '';
+  currentSearchQuery = '';
+  document.getElementById('menuSearchClear').classList.remove('show');
+  renderMenu(currentMenuFilter);
+}
+
+/* ================================================================
+   RESERVATION FORM
+================================================================ */
+document.getElementById('resForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  let ok = true;
+  const name   = v('resName');
+  const email  = v('resEmail');
+  const phone  = v('resPhone');
+  const guests = v('resGuests');
+  const date   = v('resDate');
+  const time   = v('resTime');
+  const notes  = v('resNote');
+
+  showErr('resNameErr',   !name);            if (!name)           ok=false;
+  showErr('resEmailErr',  !isEmail(email));  if (!isEmail(email)) ok=false;
+  showErr('resPhoneErr',  !isPhone(phone));  if (!isPhone(phone)) ok=false;
+  showErr('resGuestsErr', !guests);          if (!guests)         ok=false;
+  showErr('resDateErr',   !date);            if (!date)           ok=false;
+  showErr('resTimeErr',   !time);            if (!time)           ok=false;
+  if (!ok) return;
+
+  const btn   = document.getElementById('resSubmitBtn');
+  const label = document.getElementById('resSubmitLabel');
+  btn.disabled = true; btn.classList.add('loading');
+
+  const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-NG', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  if (isEmailJSConfigured()) {
+    const cfg = getEmailJSConfig();
+    const params = { to_name:name, to_email:email, reply_to:email, bcc_email:cfg.restEmail, phone, guests, res_date:formattedDate, res_time:time, notes:notes||'None' };
+    try {
+      await emailjs.send(cfg.serviceId, cfg.resTpl, params);
+      this.style.display = 'none';
+      document.getElementById('resSuccessName').textContent  = name.split(' ')[0];
+      document.getElementById('resSuccessEmail').textContent = email;
+      document.getElementById('resSuccessModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      showToast('✓ Reservation confirmed! Check your email.');
+      btn.disabled = false; btn.classList.remove('loading'); return;
+    } catch(err) { console.error('EmailJS error:', err); }
+  }
+
+  btn.disabled = false; btn.classList.remove('loading');
+  const msg = [`🍽️ *TABLE RESERVATION REQUEST — VELOUR*`,`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,`👤 *Name:* ${name}`,`📧 *Email:* ${email}`,`📞 *Phone:* ${phone}`,`👥 *Guests:* ${guests}`,`📅 *Date:* ${formattedDate}`,`⏰ *Time:* ${time}`,notes?`\n📝 *Special Requests:*\n  ${notes}`:'',``,`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,`Please confirm this reservation. Thank you!`].filter(l=>l!==undefined).join('\n');
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  this.reset();
+  showToast('✓ Reservation sent via WhatsApp! We\'ll confirm shortly.');
+});
+
+function closeResSuccessModal() {
+  document.getElementById('resSuccessModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('resSuccessModal').addEventListener('click', function(e) {
+  if (e.target === this) closeResSuccessModal();
+});
+
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  let ok = true;
+  const name  = v('ctName');
+  const email = v('ctEmail');
+  const msg   = v('ctMsg');
+  showErr('ctNameErr',  !name);            if (!name)           ok=false;
+  showErr('ctEmailErr', !isEmail(email));  if (!isEmail(email)) ok=false;
+  showErr('ctMsgErr',   !msg);             if (!msg)            ok=false;
+  if (ok) {
+    this.style.display = 'none';
+    document.getElementById('contactSuccess').style.display = 'block';
+    showToast("✓ Message sent! We'll reply within 24 hours.");
+  }
+});
+
+document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const email = v('nlEmail');
+  if (!isEmail(email)) { showToast('Please enter a valid email address.'); return; }
+  showToast('✓ Thank you for subscribing!');
+  document.getElementById('nlEmail').value = '';
+});
+
+document.getElementById('checkoutModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCheckout();
+});
+
+/* ================================================================
+   MENU RENDER
+================================================================ */
+function renderMenu(filter) {
+  currentMenuFilter = filter;
+  const grid  = document.getElementById('menuGrid');
+
+  let items = filter === 'all' ? menuItems : menuItems.filter(i => i.category === filter);
+
+  if (currentSearchQuery) {
+    items = items.filter(i => i.name.toLowerCase().includes(currentSearchQuery));
+  }
+
+  if (!items.length) {
+    const emptyMsg = currentSearchQuery
+      ? `<div class="menu-no-results"><span class="no-results-icon">🔍</span>No dishes found for "<strong style="color:var(--gold)">${currentSearchQuery}</strong>".<br><span style="font-size:0.82rem">Try a different name or <button onclick="clearMenuSearch()" style="color:var(--gold);background:none;border:none;cursor:pointer;font-family:inherit;font-size:0.82rem;text-decoration:underline">clear the search</button></span></div>`
+      : `<p style="color:var(--text-dim);font-size:0.9rem;grid-column:1/-1;text-align:center;padding:3rem 0">No items in this category yet.</p>`;
+    grid.innerHTML = emptyMsg;
+    return;
+  }
+
+  grid.innerHTML = items.map((item, idx) => `
+    <article class="menu-card active-card reveal" style="transition-delay:${idx*0.06}s">
+      <div class="menu-card-img">
+        <img src="${item.img}" alt="${item.name}" loading="lazy"/>
+        ${item.badge ? `<div class="menu-card-badge">${item.badge}</div>` : ''}
+      </div>
+      <div class="menu-card-body">
+        <div class="menu-card-name">${item.name}</div>
+        <p class="menu-card-desc">${item.desc}</p>
+        <div class="menu-card-footer">
+          <div class="menu-card-price">${fmt(item.price)}</div>
+          <button class="add-to-cart" onclick="addToCart(${item.id})">+ Add to Order</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+  setTimeout(() => grid.querySelectorAll('.reveal').forEach(el => observer.observe(el)), 50);
+}
+
+document.getElementById('menuTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.menu-tab');
+  if (!btn) return;
+  document.querySelectorAll('.menu-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(btn.dataset.filter);
+});
+
+/* ================================================================
+   CHEFS
+================================================================ */
+function renderChefs() {
+  document.getElementById('chefsGrid').innerHTML = chefs.map((c, idx) => `
+    <article class="chef-card reveal" style="transition-delay:${idx*0.1}s">
+      <div class="chef-img">
+        <img src="${c.img}" alt="${c.name}" loading="lazy"/>
+        <div class="chef-social"><a href="#" aria-label="Instagram">📷</a><a href="#" aria-label="Twitter">𝕏</a></div>
+      </div>
+      <div class="chef-info">
+        <div class="chef-name">${c.name}</div>
+        <div class="chef-role">${c.role}</div>
+        <p class="chef-bio">${c.bio}</p>
+      </div>
+    </article>
+  `).join('');
+}
+
+/* ================================================================
+   TESTIMONIALS SLIDER
+================================================================ */
+let sliderIdx = 0, sliderTimer;
+
+function renderTestimonials() {
+  document.getElementById('sliderTrack').innerHTML = testimonials.map(t => `
+    <div class="testimonial-card">
+      <div class="testi-stars">${t.stars}</div>
+      <blockquote class="testi-quote">"${t.quote}"</blockquote>
+      <div class="testi-author">${t.author} — <span>${t.role}</span></div>
+    </div>
+  `).join('');
+  document.getElementById('sliderDots').innerHTML = testimonials.map((_,i) =>
+    `<button class="slider-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></button>`
+  ).join('');
+}
+
+function goToSlide(n) {
+  sliderIdx = (n + testimonials.length) % testimonials.length;
+  document.getElementById('sliderTrack').style.transform = `translateX(-${sliderIdx*100}%)`;
+  document.querySelectorAll('.slider-dot').forEach((d,i) => d.classList.toggle('active', i===sliderIdx));
+  resetAutoSlide();
+}
+function moveSlider(dir) { goToSlide(sliderIdx + dir); }
+function resetAutoSlide() { clearInterval(sliderTimer); sliderTimer = setInterval(() => moveSlider(1), 5000); }
+
+/* ================================================================
+   FAQ
+================================================================ */
+function renderFAQ() {
+  document.getElementById('faqGrid').innerHTML = faqs.map((f,i) => `
+    <div class="faq-item reveal" style="transition-delay:${i*0.06}s">
+      <div class="faq-q" onclick="toggleFAQ(this)">
+        <span>${f.q}</span><div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">${f.a}</div>
+    </div>
+  `).join('');
+}
+function toggleFAQ(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ================================================================
+   OWNER PANEL
+================================================================ */
+const OWNER_PW_KEY = 'vl_owner_pw';
+function getOwnerPassword() { return localStorage.getItem(OWNER_PW_KEY) || 'velour2024'; }
+let ownerLoggedIn = false;
+
+function openOwnerPanel() {
+  document.getElementById('ownerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('ownerLogin').style.display   = ownerLoggedIn ? 'none' : 'block';
+  document.getElementById('ownerContent').style.display = ownerLoggedIn ? 'block' : 'none';
+  if (ownerLoggedIn) { ownerShowTab('products'); loadEmailJSFields(); loadJsonBinFields(); }
+}
+function closeOwnerPanel() {
+  document.getElementById('ownerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('ownerOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeOwnerPanel();
+});
+
+function ownerLogin() {
+  const pw  = document.getElementById('ownerPass').value;
+  const err = document.getElementById('loginErr');
+  if (pw === getOwnerPassword()) {
+    ownerLoggedIn = true;
+    document.getElementById('ownerLogin').style.display   = 'none';
+    document.getElementById('ownerContent').style.display = 'block';
+    document.getElementById('ownerPass').value = '';
+    err.classList.remove('show');
+    ownerShowTab('products'); loadEmailJSFields(); loadJsonBinFields();
+    if (isJsonBinConfigured()) setSyncStatus('synced', '✓ Cloud configured');
+  } else { err.classList.add('show'); }
+}
+function ownerLogout() {
+  ownerLoggedIn = false;
+  document.getElementById('ownerLogin').style.display   = 'block';
+  document.getElementById('ownerContent').style.display = 'none';
+  closeOwnerPanel();
+}
+
+function ownerShowTab(tab) {
+  document.querySelectorAll('.owner-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.owner-tab').forEach(b => {
+    const fn = b.getAttribute('onclick') || '';
+    if (fn.includes(`'${tab}'`)) b.classList.add('active');
+  });
+  document.getElementById('ownerTabProducts').style.display = tab === 'products' ? 'block' : 'none';
+  document.getElementById('ownerTabJsonbin').style.display  = tab === 'jsonbin'  ? 'block' : 'none';
+  document.getElementById('ownerTabSettings').style.display = tab === 'settings' ? 'block' : 'none';
+  document.getElementById('ownerTabPassword').style.display = tab === 'password' ? 'block' : 'none';
+  if (tab === 'products') renderOwnerProductList();
+}
+
+function loadJsonBinFields() {
+  const c = getJsonBinConfig();
+  const binEl = document.getElementById('cfBinId');
+  const keyEl = document.getElementById('cfBinKey');
+  if (binEl) binEl.value = c.binId;
+  if (keyEl) keyEl.value = c.apiKey;
+}
+
+function triggerImgUpload() {}
+
+function handleImgUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Image too large. Max 5MB.'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    document.getElementById('opImg').value = base64;
+    document.getElementById('opImgUrl').value = '';
+    const previewImg  = document.getElementById('imgPreviewEl');
+    const placeholder = document.getElementById('imgUploadPlaceholder');
+    previewImg.src = base64; previewImg.style.display = 'block'; placeholder.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function syncImgUrl(url) {
+  if (!url) return;
+  document.getElementById('opImg').value = url;
+  const previewImg  = document.getElementById('imgPreviewEl');
+  const placeholder = document.getElementById('imgUploadPlaceholder');
+  previewImg.src = url; previewImg.style.display = 'block'; placeholder.style.display = 'none';
+  document.getElementById('opImgFile').value = '';
+}
+
+function resetImgUpload() {
+  document.getElementById('opImg').value     = '';
+  document.getElementById('opImgUrl').value  = '';
+  document.getElementById('opImgFile').value = '';
+  document.getElementById('imgPreviewEl').style.display      = 'none';
+  document.getElementById('imgUploadPlaceholder').style.display = 'flex';
+}
+
+function renderOwnerProductList() {
+  const items = loadMenuItemsLocal();
+  const list  = document.getElementById('ownerProductList');
+  if (!items.length) {
+    list.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem;padding:1rem 0">No menu items yet. Add your first item below.</p>'; return;
+  }
+  list.innerHTML = items.map(item => `
+    <div class="owner-product-row">
+      <img src="${item.img}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=100&q=50'" />
+      <div class="owner-product-info">
+        <div class="owner-product-name">${item.name}</div>
+        <div class="owner-product-meta">${item.category} · ${fmt(item.price)}${item.badge ? ' · '+item.badge : ''}</div>
+      </div>
+      <div class="owner-product-actions">
+        <button class="owner-btn-edit" onclick="ownerEditProduct(${item.id})">Edit</button>
+        <button class="owner-btn-del" onclick="ownerDeleteProduct(${item.id})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function ownerStartAdd() {
+  document.getElementById('ownerProductForm').style.display = 'block';
+  document.getElementById('ownerFormTitle').textContent = 'Add New Menu Item';
+  document.getElementById('ownerEditId').value  = '';
+  document.getElementById('opName').value       = '';
+  document.getElementById('opCategory').value   = 'mains';
+  document.getElementById('opPrice').value      = '';
+  document.getElementById('opBadge').value      = '';
+  document.getElementById('opDesc').value       = '';
+  resetImgUpload();
+  document.getElementById('opName').focus();
+}
+
+function ownerEditProduct(id) {
+  const item = loadMenuItemsLocal().find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('ownerProductForm').style.display = 'block';
+  document.getElementById('ownerFormTitle').textContent = 'Edit Menu Item';
+  document.getElementById('ownerEditId').value  = id;
+  document.getElementById('opName').value       = item.name;
+  document.getElementById('opCategory').value   = item.category;
+  document.getElementById('opPrice').value      = item.price;
+  document.getElementById('opBadge').value      = item.badge || '';
+  document.getElementById('opDesc').value       = item.desc;
+  document.getElementById('opImg').value = item.img;
+  document.getElementById('opImgUrl').value = item.img.startsWith('data:') ? '' : item.img;
+  const previewImg  = document.getElementById('imgPreviewEl');
+  const placeholder = document.getElementById('imgUploadPlaceholder');
+  previewImg.src = item.img; previewImg.style.display = 'block'; placeholder.style.display = 'none';
+  document.getElementById('ownerProductForm').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+async function ownerSaveProduct() {
+  const name     = document.getElementById('opName').value.trim();
+  const category = document.getElementById('opCategory').value;
+  const price    = parseInt(document.getElementById('opPrice').value);
+  const badge    = document.getElementById('opBadge').value.trim();
+  const desc     = document.getElementById('opDesc').value.trim();
+  const img      = document.getElementById('opImg').value.trim();
+  const editId   = document.getElementById('ownerEditId').value;
+
+  if (!name || !category || !price || !desc || !img) {
+    showToast('Please fill in all required fields including an image.'); return;
+  }
+
+  let items = loadMenuItemsLocal();
+  if (editId) {
+    const idx = items.findIndex(i => i.id === parseInt(editId));
+    if (idx > -1) items[idx] = { ...items[idx], name, category, price, badge: badge || null, desc, img };
+  } else {
+    items.unshift({ id: Date.now(), name, category, price, badge: badge || null, desc, img });
+  }
+
+  saveMenuItemsLocal(items);
+  menuItems = items;
+
+  // Push to cloud so all visitors see the update
+  const pushed = await pushMenuToCloud(items);
+  if (!pushed && isJsonBinConfigured()) {
+    showToast('⚠ Saved locally but cloud sync failed. Check credentials.');
+  } else if (!isJsonBinConfigured()) {
+    showToast(editId ? '✓ Item updated locally. Set up Cloud Sync to share with all visitors.' : '✓ Item added locally. Set up Cloud Sync to share with all visitors.');
+  } else {
+    showToast(editId ? '✓ Menu item updated and synced to cloud!' : '✓ New item added and synced to cloud!');
+  }
+
+  renderOwnerProductList();
+  ownerCancelForm();
+  renderMenu(currentMenuFilter);
+}
+
+async function ownerDeleteProduct(id) {
+  if (!confirm('Delete this menu item? This cannot be undone.')) return;
+  let items = loadMenuItemsLocal().filter(i => i.id !== id);
+  saveMenuItemsLocal(items);
+  menuItems = items;
+
+  await pushMenuToCloud(items);
+
+  renderOwnerProductList();
+  cart = cart.filter(i => i.id !== id);
+  saveCart(); updateCartUI();
+  renderMenu(currentMenuFilter);
+}
+
+function ownerCancelForm() {
+  document.getElementById('ownerProductForm').style.display = 'none';
+  resetImgUpload();
+}
+
+function loadEmailJSFields() {
+  const c = getEmailJSConfig();
+  document.getElementById('cfPublicKey').value = c.publicKey;
+  document.getElementById('cfServiceId').value = c.serviceId;
+  document.getElementById('cfResTpl').value    = c.resTpl;
+  document.getElementById('cfRestEmail').value = c.restEmail;
+}
+
+function saveEmailJSConfig() {
+  const pk    = document.getElementById('cfPublicKey').value.trim();
+  const svc   = document.getElementById('cfServiceId').value.trim();
+  const res   = document.getElementById('cfResTpl').value.trim();
+  const email = document.getElementById('cfRestEmail').value.trim();
+  const status = document.getElementById('cfStatus');
+  if (!pk || !svc || !res) { status.textContent = '⚠ Please fill in Public Key, Service ID, and Template ID.'; status.className = 'config-status err'; return; }
+  localStorage.setItem('vl_ejs_pk', pk); localStorage.setItem('vl_ejs_svc', svc); localStorage.setItem('vl_ejs_res', res); localStorage.setItem('vl_ejs_email', email || 'hello@velourrestaurant.ng');
+  try { emailjs.init({ publicKey: pk }); } catch(e) {}
+  status.textContent = '✓ Configuration saved! Reservation emails are now active.'; status.className = 'config-status ok';
+  document.getElementById('resSubmitLabel').textContent = 'Confirm Reservation →';
+  document.getElementById('emailjsNotice').style.display = 'none';
+  showToast('✓ EmailJS configured successfully!');
+}
+
+function changeOwnerPassword() {
+  const cur  = document.getElementById('pwCurrent').value;
+  const nw   = document.getElementById('pwNew').value;
+  const conf = document.getElementById('pwConfirm').value;
+  const err  = document.getElementById('pwErr');
+  const ok   = document.getElementById('pwOk');
+  err.style.display = 'none'; ok.style.display = 'none';
+  if (cur !== getOwnerPassword()) { err.textContent = '✗ Current password is incorrect.'; err.style.display = 'block'; return; }
+  if (nw.length < 6)              { err.textContent = '✗ New password must be at least 6 characters.'; err.style.display = 'block'; return; }
+  if (nw !== conf)                { err.textContent = '✗ Passwords do not match.'; err.style.display = 'block'; return; }
+  localStorage.setItem(OWNER_PW_KEY, nw);
+  ['pwCurrent','pwNew','pwConfirm'].forEach(id => document.getElementById(id).value = '');
+  ok.style.display = 'block';
+  showToast('✓ Owner password updated!');
+}
+
+/* ================================================================
+   HELPERS
+================================================================ */
+function v(id)              { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function showErr(id, show)  { const el = document.getElementById(id); if(el) el.classList.toggle('show', show); }
+function clearErrors()      { document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show')); }
+function isEmail(e)         { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function isPhone(p)         { return /^[\d\s\+\-\(\)]{7,}$/.test(p); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 400);
+});
+document.getElementById('scrollTop').addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+function toggleMobileMenu() {
+  const menu   = document.getElementById('mobileMenu');
+  const toggle = document.getElementById('navToggle');
+  menu.classList.toggle('open');
+  toggle.classList.toggle('open');
+  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('navToggle').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+  });
+}, { threshold:0.12 });
+
+function observeAll() {
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+}
+
+function animateCounter(el, target) {
+  const step = target / (1800 / 16);
+  let current = 0;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = target > 100 ? Math.floor(current).toLocaleString() : Math.floor(current);
+  }, 16);
+}
+
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { animateCounter(entry.target, parseInt(entry.target.dataset.target)); counterObserver.unobserve(entry.target); }
+  });
+}, { threshold:0.5 });
+
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1800);
+});
+
+/* ================================================================
+   INIT
+================================================================ */
+initMenu(); // async: loads from cloud then renders
+renderChefs();
+renderTestimonials();
+renderFAQ();
+resetAutoSlide();
+updateCartUI();
+
+if (!isEmailJSConfigured()) {
+  document.getElementById('emailjsNotice').style.display  = 'block';
+  document.getElementById('resSubmitLabel').textContent   = 'Send Reservation via WhatsApp →';
+}
+
+document.getElementById('resDate').setAttribute('min', new Date().toISOString().split('T')[0]);
+
+setTimeout(() => {
+  observeAll();
+  document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+}, 200);
+</script>
+</body>
+</html>
